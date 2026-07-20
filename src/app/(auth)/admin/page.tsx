@@ -17,11 +17,12 @@ import {
   Download,
   Share2,
   TrendingUp,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 import { FractionRule, DEFAULT_FRACTION_RULES, formatNumber } from '@/lib/calculations';
 
-type Tab = 'analytics' | 'fractions' | 'ara-arb' | 'security';
+type Tab = 'analytics' | 'fractions' | 'ara-arb' | 'security' | 'terms';
 
 interface AnalyticsData {
   summary: {
@@ -51,6 +52,9 @@ export default function AdminDashboardPage() {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  // Terms and Conditions state
+  const [terms, setTerms] = useState('');
 
   // Analytics states
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
@@ -86,6 +90,13 @@ export default function AdminDashboardPage() {
             setArbAkselerasi(data.araArb.Akselerasi[0].arb);
           }
         }
+      }
+
+      // Fetch settings
+      const resSettings = await fetch('/api/settings');
+      if (resSettings.ok) {
+        const settingData = await resSettings.json();
+        setTerms(settingData.terms);
       }
 
       // Fetch analytics
@@ -164,6 +175,30 @@ export default function AdminDashboardPage() {
         setConfirmPassword('');
       } else {
         setMessage({ type: 'error', text: data.error || 'Gagal mengubah password.' });
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Terjadi kesalahan jaringan.' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveTerms = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setMessage(null);
+
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ terms }),
+      });
+
+      if (res.ok) {
+        setMessage({ type: 'success', text: 'Syarat dan Ketentuan berhasil diperbarui!' });
+      } else {
+        setMessage({ type: 'error', text: 'Gagal menyimpan Syarat dan Ketentuan.' });
       }
     } catch {
       setMessage({ type: 'error', text: 'Terjadi kesalahan jaringan.' });
@@ -251,6 +286,14 @@ export default function AdminDashboardPage() {
             >
               <Percent size={18} />
               <span>Aturan ARA / ARB</span>
+            </button>
+
+            <button
+              onClick={() => { setActiveTab('terms'); setMessage(null); }}
+              className={`admin-sidebar-btn ${activeTab === 'terms' ? 'active' : ''}`}
+            >
+              <FileText size={18} />
+              <span>Syarat & Ketentuan</span>
             </button>
 
             <button
@@ -642,6 +685,39 @@ export default function AdminDashboardPage() {
                     <span>{saving ? 'Menyimpan...' : 'Simpan Persentase ARA/ARB'}</span>
                   </button>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: TERMS & CONDITIONS */}
+          {activeTab === 'terms' && (
+            <div className="flat-card" style={{ maxWidth: '800px' }}>
+              <div>
+                <div className="card-top">
+                  <span className="card-title-text">Syarat & Ketentuan Disclaimer</span>
+                </div>
+                <p className="form-label" style={{ fontWeight: 500, color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                  Atur teks syarat & ketentuan (disclaimer) yang ditampilkan di bagian bawah website utama.
+                </p>
+
+                <form onSubmit={handleSaveTerms} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div className="form-group">
+                    <label className="form-label">Teks Syarat & Ketentuan</label>
+                    <textarea
+                      className="form-input"
+                      rows={6}
+                      value={terms}
+                      onChange={(e) => setTerms(e.target.value)}
+                      required
+                      style={{ resize: 'vertical', fontFamily: 'inherit' }}
+                    />
+                  </div>
+
+                  <button type="submit" disabled={saving} className="btn-primary" style={{ width: 'auto' }}>
+                    <Save size={18} />
+                    <span>{saving ? 'Menyimpan...' : 'Simpan Syarat & Ketentuan'}</span>
+                  </button>
+                </form>
               </div>
             </div>
           )}

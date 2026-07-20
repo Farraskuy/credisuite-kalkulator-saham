@@ -3,6 +3,7 @@ import AraArbSection from '@/components/AraArbSection';
 import AvgUpDownSection from '@/components/AvgUpDownSection';
 import PredictionSection from '@/components/PredictionSection';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
+import DynamicDisclaimer from '@/components/DynamicDisclaimer';
 import { Metadata } from 'next';
 
 
@@ -56,10 +57,7 @@ export default function HomePage() {
           <p style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.4rem' }}>
             KalkulatorSaham.id • Alat Analisis Saham BEI
           </p>
-          <p>
-            Seluruh hasil kalkulasi bersifat simulasi matematis berdasarkan fraksi bursa IDX dan bukan merupakan
-            ajakan atau rekomendasi resmi jual beli saham.
-          </p>
+          <DynamicDisclaimer />
         </div>
       </footer>
     </div>

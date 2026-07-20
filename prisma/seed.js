@@ -71,6 +71,23 @@ async function main() {
     console.log('✔ Persentase ARA/ARB sudah terisi.');
   }
 
+  // 4. Seed Terms and Conditions
+  const existingTerms = await prisma.systemSetting.findUnique({
+    where: { key: 'terms' },
+  });
+
+  if (!existingTerms) {
+    await prisma.systemSetting.create({
+      data: {
+        key: 'terms',
+        value: 'Website ini hanya merupakan alat bantu kalkulasi saham semata berdasarkan parameter input pengguna dan aturan fraksi BEI secara matematis, serta bukan merupakan rekomendasi, saran, atau tolak ukur baku untuk transaksi jual beli saham. Keputusan investasi sepenuhnya ada di tangan pengguna.',
+      },
+    });
+    console.log('✔ Syarat dan Ketentuan default berhasil disimpan.');
+  } else {
+    console.log('✔ Syarat dan Ketentuan sudah terisi.');
+  }
+
   console.log('Seeding selesai!');
 }
 

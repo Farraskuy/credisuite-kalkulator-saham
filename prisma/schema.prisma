@@ -38,7 +38,12 @@ model TrafficLog {
 
 model ActionLog {
   id             String   @id @default(cuid())
-  calculatorType String   // 'ara-arb' | 'average' | 'prediction'
-  action         String   // 'download' | 'share'
+  calculatorType String
+  action         String
   timestamp      DateTime @default(now())
+}
+
+model SystemSetting {
+  key   String @id
+  value String
 }
