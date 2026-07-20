@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model FractionRule {
+  id       String @id @default(cuid())
+  minPrice Float
+  maxPrice Float
+  tick     Float
+}
+
+model AraArbRule {
+  id    String @id @default(cuid())
+  board String @unique
+  ara   Float
+  arb   Float
+}

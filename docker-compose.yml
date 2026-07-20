@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123"
+      POSTGRES_DB: kalkulator_saham
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kalkulator_saham"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://postgres:123@postgres:5432/kalkulator_saham
+      SESSION_SECRET: local-development-secret-change-in-production
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx prisma db push && npm start"
+volumes:
+  postgres_data:
