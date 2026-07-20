@@ -4,7 +4,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 RUN npm install
 COPY . .
-RUN npx prisma generate
+RUN ./node_modules/.bin/prisma generate
 RUN npm run build
 
 FROM node:22-alpine AS runner
