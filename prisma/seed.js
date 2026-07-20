@@ -11,8 +11,8 @@ async function main() {
   console.log('Memulai seeding database...');
 
   // 1. Seed Admin User
-  const email = 'admin@kalkulatorsaham.id';
-  const passwordHash = hashPassword('admin123');
+  const email = 'admin@credisuite.com';
+  const passwordHash = hashPassword('credisuite2026');
 
   const existingAdmin = await prisma.adminUser.findUnique({
     where: { email },

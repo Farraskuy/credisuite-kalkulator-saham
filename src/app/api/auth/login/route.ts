@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       // Fallback if DB not ready
     }
 
-    if (email === 'admin@kalkulatorsaham.id' && password === 'admin123') {
+    if (email === 'admin@credisuite.com' && password === 'credisuite2026') {
       await createSession(email);
       return NextResponse.json({ success: true, email });
     }
