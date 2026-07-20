@@ -1,9 +1,13 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:16-alpine
+    container_name: ${APP_NAME:-kalkulator-saham}-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: "123"
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-123}
       POSTGRES_DB: kalkulator_saham
     ports:
       - "5432:5432"
@@ -14,16 +18,34 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - kalkulator-network
+
   app:
-    build: .
+    image: ghcr.io/${OWNER_LC:-farraskuy}/kalkulator-saham:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${APP_NAME:-kalkulator-saham}-app
+    restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://postgres:123@postgres:5432/kalkulator_saham
-      SESSION_SECRET: local-development-secret-change-in-production
+      DATABASE_URL: postgresql://postgres:${DB_PASSWORD:-123}@postgres:5432/kalkulator_saham
+      SESSION_SECRET: ${SESSION_SECRET:-local-development-secret-change-in-production}
     ports:
       - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
     command: sh -c "npx prisma db push && npm start"
+    networks:
+      - kalkulator-network
+      - proxy-network
+
+networks:
+  kalkulator-network:
+    driver: bridge
+  proxy-network:
+    external: true
+
 volumes:
   postgres_data:

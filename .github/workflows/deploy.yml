@@ -1,0 +1,80 @@
+name: Deploy Kalkulator Saham (Production)
+
+on:
+  push:
+    branches:
+      - main
+      - production
+
+jobs:
+  build-and-deploy:
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Environment Variables
+        run: |
+          echo "APP_NAME=kalkulator-saham" >> $GITHUB_ENV
+          echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >> ${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository_owner }}'
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: true
+          tags: ghcr.io/${{ env.OWNER_LC }}/kalkulator-saham:${{ env.IMAGE_TAG }}
+
+      - name: Copy docker-compose.yml to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "docker-compose.yml"
+          target: "../apps/${{ env.APP_NAME }}/"
+
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          ENV_PRODUCTION: ${{ secrets.ENV_PRODUCTION }}
+          APP_NAME: ${{ env.APP_NAME }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          OWNER_LC: ${{ env.OWNER_LC }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: ENV_PRODUCTION,APP_NAME,IMAGE_TAG,GHCR_PAT,GITHUB_ACTOR,OWNER_LC
+          script: |
+            mkdir -p ../apps/$APP_NAME
+            cd ../apps/$APP_NAME
+            
+            echo "APP_NAME=$APP_NAME" > .env
+            echo "IMAGE_TAG=$IMAGE_TAG" >> .env
+            echo "OWNER_LC=$OWNER_LC" >> .env
+            echo "$ENV_PRODUCTION" >> .env
+            
+            echo "$GHCR_PAT" | sudo docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+            
+            sudo docker compose -p $APP_NAME pull app
+            sudo docker compose -p $APP_NAME up -d
