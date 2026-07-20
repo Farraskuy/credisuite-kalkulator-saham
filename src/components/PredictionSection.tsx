@@ -159,7 +159,7 @@ export default function PredictionSection({ fractionRules }: Props) {
         </div>
 
         {/* Right Output Card */}
-        <ExportCardWrapper fileName={`kalkulator-prediksi-target-${hargaBeli}`}>
+        <ExportCardWrapper fileName={`kalkulator-prediksi-target-${hargaBeli}`} calculatorType="prediction">
           <div className="card-top">
             <div className="card-title-group">
               <div

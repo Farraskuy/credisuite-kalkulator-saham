@@ -96,7 +96,7 @@ export default function AraArbSection({ fractionRules }: Props) {
         </div>
 
         {/* Right Output Card */}
-        <ExportCardWrapper fileName={`kalkulator-ara-arb-${price}`}>
+        <ExportCardWrapper fileName={`kalkulator-ara-arb-${price}`} calculatorType="ara-arb">
           <div className="card-top">
             <div className="card-title-group">
               <div

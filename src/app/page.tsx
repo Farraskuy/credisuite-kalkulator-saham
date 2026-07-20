@@ -2,7 +2,9 @@ import Navbar from '@/components/Navbar';
 import AraArbSection from '@/components/AraArbSection';
 import AvgUpDownSection from '@/components/AvgUpDownSection';
 import PredictionSection from '@/components/PredictionSection';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 import { Metadata } from 'next';
+
 
 export const metadata: Metadata = {
   title: 'Kalkulator Saham BEI - Hitung ARA, ARB, Average & Target Untung Rugi',
@@ -21,6 +23,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <AnalyticsTracker />
       <Navbar />
 
       <main className="app-container">

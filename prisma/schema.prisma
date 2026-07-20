@@ -27,3 +27,18 @@ model AraArbRule {
   ara   Float
   arb   Float
 }
+
+model TrafficLog {
+  id        String   @id @default(cuid())
+  referrer  String
+  path      String
+  userAgent String
+  timestamp DateTime @default(now())
+}
+
+model ActionLog {
+  id             String   @id @default(cuid())
+  calculatorType String   // 'ara-arb' | 'average' | 'prediction'
+  action         String   // 'download' | 'share'
+  timestamp      DateTime @default(now())
+}

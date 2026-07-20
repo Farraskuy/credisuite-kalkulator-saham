@@ -7,12 +7,25 @@ import { toPng } from 'html-to-image';
 interface Props {
   children: React.ReactNode;
   fileName: string;
+  calculatorType: 'ara-arb' | 'average' | 'prediction';
 }
 
-export default function ExportCardWrapper({ children, fileName }: Props) {
+export default function ExportCardWrapper({ children, fileName, calculatorType }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
+
+  const logAction = async (action: 'download' | 'share') => {
+    try {
+      await fetch('/api/analytics/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ calculatorType, action }),
+      });
+    } catch {
+      // Fail silently
+    }
+  };
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
@@ -26,6 +39,7 @@ export default function ExportCardWrapper({ children, fileName }: Props) {
       link.download = `${fileName}.png`;
       link.href = dataUrl;
       link.click();
+      logAction('download');
     } catch (err) {
       console.error('Export error:', err);
     } finally {
@@ -39,6 +53,8 @@ export default function ExportCardWrapper({ children, fileName }: Props) {
       const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
       const blob = await (await fetch(dataUrl)).blob();
       const file = new File([blob], `${fileName}.png`, { type: 'image/png' });
+
+      logAction('share');
 
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({

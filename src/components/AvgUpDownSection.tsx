@@ -205,7 +205,7 @@ export default function AvgUpDownSection() {
         </div>
 
         {/* Right Output Card */}
-        <ExportCardWrapper fileName={`kalkulator-average-${result.avgPrice}`}>
+        <ExportCardWrapper fileName={`kalkulator-average-${result.avgPrice}`} calculatorType="average">
           <div className="card-top">
             <div className="card-title-group">
               <div
