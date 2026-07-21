@@ -34,30 +34,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+      if (savedTheme) return savedTheme;
+    }
+    return 'dark';
+  });
 
   useEffect(() => {
-    // Initial theme setup
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    } else {
-      document.documentElement.classList.add('dark');
-      setTheme('dark');
-    }
+    // Synchronize DOM dark mode class with state
+    document.documentElement.classList.toggle('dark', theme === 'dark');
 
     // Verify session
+    let isMounted = true;
     fetch('/api/auth/me')
       .then((res) => {
         if (!res.ok) {
           router.push('/login');
-        } else {
+        } else if (isMounted) {
           setAuthenticated(true);
         }
       })
-      .catch(() => router.push('/login'));
-  }, [router]);
+      .catch(() => {
+        if (isMounted) router.push('/login');
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [router, theme]);
 
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
@@ -97,9 +103,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="h-screen flex overflow-hidden bg-page text-main transition-colors duration-300">
       {/* SIDEBAR FOR DESKTOP */}
-      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 flex-shrink-0 bg-card border-r border-border-custom transition-colors duration-300">
+      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 shrink-0 bg-card border-r border-border-custom transition-colors duration-300">
         {/* Brand Logo */}
-        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-border-custom flex-shrink-0">
+        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-border-custom shrink-0">
           <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
             KS
           </div>
@@ -107,7 +113,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Master Menu Label */}
-        <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase flex-shrink-0">
+        <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase shrink-0">
           Master Menu
         </div>
 
@@ -132,24 +138,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             );
           })}
         </nav>
-
-        {/* Sidebar Footer / Logout */}
-        <div className="p-4 border-t border-border-custom flex-shrink-0">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-acc-pink hover:bg-sub-pink transition-all duration-200 cursor-pointer"
-          >
-            <LogOut size={16} />
-            <span>Keluar Sesi</span>
-          </button>
-        </div>
       </aside>
 
       {/* MOBILE DRAWER SIDEBAR */}
       {mobileSidebarOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden bg-black/50 backdrop-blur-sm">
           <div className="w-64 bg-card h-full flex flex-col border-r border-border-custom animate-slide-in">
-            <div className="h-16 flex items-center justify-between px-6 border-b border-border-custom flex-shrink-0">
+            <div className="h-16 flex items-center justify-between px-6 border-b border-border-custom shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
                   KS
@@ -161,11 +156,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </button>
             </div>
 
-            <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase flex-shrink-0">
+            <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase shrink-0">
               Master Menu
             </div>
 
-            <nav className="flex-grow px-4 space-y-1.5 overflow-y-auto">
+            <nav className="grow px-4 space-y-1.5 overflow-y-auto">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -186,16 +181,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 );
               })}
             </nav>
-
-            <div className="p-4 border-t border-border-custom flex-shrink-0">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-acc-pink hover:bg-sub-pink transition-all duration-200 cursor-pointer"
-              >
-                <LogOut size={16} />
-                <span>Keluar Sesi</span>
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -203,7 +188,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* MAIN CONTAINER */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* TOP BAR */}
-        <header className="h-16 flex-shrink-0 bg-card border-b border-border-custom flex items-center justify-between px-4 sm:px-6 z-10 transition-colors duration-300">
+        <header className="h-16 shrink-0 bg-card border-b border-border-custom flex items-center justify-between px-4 sm:px-6 z-10 transition-colors duration-300">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileSidebarOpen(true)}
