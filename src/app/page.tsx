@@ -29,7 +29,7 @@ export default function HomePage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow space-y-12">
         {/* HERO SECTION */}
-        <section className="text-center max-w-3xl mx-auto mt-8 mb-10 space-y-4">
+        <section className="text-center max-w-3xl mx-auto mt-8 mb-10 space-y-4 py-32">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-main">
             Keputusan Saham Lebih <span className="text-acc-blue">Presisi & Terukur</span>
           </h1>
