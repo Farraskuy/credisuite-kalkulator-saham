@@ -79,12 +79,13 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
 
   return (
     <div className="flex flex-col gap-3">
-      <div ref={cardRef} className="flat-card export-output-card">
+      {/* Target export card container */}
+      <div ref={cardRef} className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
         {children}
 
         {/* Watermark in Bottom-Left */}
-        <div className="watermark-footer">
-          <div className="watermark-badge">
+        <div className="flex items-center justify-between text-[11px] text-muted border-t border-border-custom pt-4 mt-6">
+          <div className="flex items-center gap-1 font-bold text-acc-blue">
             <TrendingUp size={14} />
             <span>KalkulatorSaham.id</span>
           </div>
@@ -92,12 +93,11 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
+      <div className="flex gap-3 mt-3">
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="btn-primary"
-          style={{ flex: 1 }}
+          className="flex-grow flex items-center justify-center gap-2 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-3 px-6 rounded-2xl text-sm transition-all duration-200 shadow-md shadow-acc-blue/15 cursor-pointer disabled:opacity-50"
         >
           <Download size={17} />
           <span>{downloading ? 'Membuat PNG...' : 'Unduh Gambar PNG'}</span>
@@ -105,10 +105,10 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
 
         <button
           onClick={handleShare}
-          className="btn-secondary"
+          className="flex items-center justify-center gap-2 bg-card border border-border-custom text-main font-semibold py-3 px-5 rounded-2xl text-sm transition-all duration-200 hover:border-acc-blue hover:text-acc-blue cursor-pointer"
           title="Bagikan Gambar"
         >
-          {copied ? <Check size={17} color="#059669" /> : <Share2 size={17} />}
+          {copied ? <Check size={17} className="text-acc-green" /> : <Share2 size={17} />}
           <span>{copied ? 'Tersalin!' : 'Bagikan'}</span>
         </button>
       </div>

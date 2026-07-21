@@ -35,58 +35,55 @@ export default function PredictionSection({ fractionRules }: Props) {
   };
 
   return (
-    <section id="prediction" className="calculator-section">
-      <div className="section-header">
-        <div className="section-breadcrumb">Kalkulator #3</div>
-        <h2 className="section-title">
-          <div className="section-badge-icon" style={{ background: 'var(--accent-green)' }}>
+    <section id="prediction" className="space-y-6 scroll-mt-20">
+      <div className="border-b border-border-custom pb-4">
+        <div className="text-xs font-bold text-acc-green uppercase tracking-wider">Kalkulator #3</div>
+        <h2 className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5 text-main mt-1">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-green shadow-sm shadow-acc-green/20">
             <Target size={20} />
           </div>
           Prediksi Jual / Beli & Target Untung Rugi
         </h2>
       </div>
 
-      <div className="calculator-grid">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* Left Form Card */}
-        <div className="flat-card">
+        <div className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[440px]">
           <div>
-            <div className="card-top">
-              <div className="card-title-group">
-                <div
-                  className="card-title-icon"
-                  style={{ background: 'var(--bg-sub-green)', color: 'var(--accent-green)' }}
-                >
+            <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-green text-acc-green">
                   <Target size={20} />
                 </div>
-                <span className="card-title-text">Parameter Target & Fee</span>
+                <span className="font-bold text-main">Parameter Target & Fee</span>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '0.85rem' }}>
-              <div className="form-group">
-                <label htmlFor="pred-price" className="form-label">
+            <div className="grid grid-cols-[1.2fr_1fr] gap-3 mb-4">
+              <div className="space-y-1">
+                <label htmlFor="pred-price" className="text-xs font-bold text-muted block">
                   Harga Beli Saham (Rp)
                 </label>
                 <input
                   id="pred-price"
                   type="text"
                   inputMode="numeric"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={hargaBeli ? formatNumber(hargaBeli) : ''}
                   onChange={handleNumChange(setHargaBeli)}
                   placeholder="e.g. 1000"
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="pred-lot" className="form-label">
+              <div className="space-y-1">
+                <label htmlFor="pred-lot" className="text-xs font-bold text-muted block">
                   Jumlah Lot
                 </label>
                 <input
                   id="pred-lot"
                   type="text"
                   inputMode="numeric"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={lot ? formatNumber(lot) : ''}
                   onChange={handleNumChange(setLot)}
                   placeholder="e.g. 10"
@@ -94,61 +91,61 @@ export default function PredictionSection({ fractionRules }: Props) {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
-              <div className="form-group">
-                <label htmlFor="pred-feebeli" className="form-label">
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="space-y-1">
+                <label htmlFor="pred-feebeli" className="text-xs font-bold text-muted block">
                   Fee Beli Sekuritas (%)
                 </label>
                 <input
                   id="pred-feebeli"
                   type="number"
                   step="0.01"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={feeBeli}
                   onChange={(e) => setFeeBeli(parseFloat(e.target.value) || 0)}
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="pred-feejual" className="form-label">
+              <div className="space-y-1">
+                <label htmlFor="pred-feejual" className="text-xs font-bold text-muted block">
                   Fee Jual Sekuritas (%)
                 </label>
                 <input
                   id="pred-feejual"
                   type="number"
                   step="0.01"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={feeJual}
                   onChange={(e) => setFeeJual(parseFloat(e.target.value) || 0)}
                 />
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
-              <div className="form-group">
-                <label htmlFor="pred-profit" className="form-label">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label htmlFor="pred-profit" className="text-xs font-bold text-muted block">
                   Target Untung (Rp)
                 </label>
                 <input
                   id="pred-profit"
                   type="text"
                   inputMode="numeric"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={targetUntungRp ? formatNumber(targetUntungRp) : ''}
                   onChange={handleNumChange(setTargetUntungRp)}
                   placeholder="e.g. 250000"
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="pred-loss" className="form-label">
+              <div className="space-y-1">
+                <label htmlFor="pred-loss" className="text-xs font-bold text-muted block">
                   Batas Maksimal Rugi (Rp)
                 </label>
                 <input
                   id="pred-loss"
                   type="text"
                   inputMode="numeric"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={targetRugiRp ? formatNumber(targetRugiRp) : ''}
                   onChange={handleNumChange(setTargetRugiRp)}
                   placeholder="e.g. 100000"
@@ -160,143 +157,86 @@ export default function PredictionSection({ fractionRules }: Props) {
 
         {/* Right Output Card */}
         <ExportCardWrapper fileName={`kalkulator-prediksi-target-${hargaBeli}`} calculatorType="prediction">
-          <div className="card-top">
-            <div className="card-title-group">
-              <div
-                className="card-title-icon"
-                style={{ background: 'var(--bg-sub-green)', color: 'var(--accent-green)' }}
-              >
+          <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-green text-acc-green">
                 <DollarSign size={20} />
               </div>
-              <span className="card-title-text">Hasil Proyeksi Transaksi</span>
+              <span className="font-bold text-main">Hasil Proyeksi Transaksi</span>
             </div>
-            <span
-              style={{
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: 'var(--accent-green)',
-                background: 'var(--bg-sub-green)',
-                padding: '0.25rem 0.65rem',
-                borderRadius: '8px',
-              }}
-            >
+            <span className="text-xs font-bold text-acc-green bg-sub-green px-2.5 py-1 rounded-lg">
               {formatNumber(result.rincian.totalLembar)} Lembar Saham
             </span>
           </div>
 
-          <div className="accent-banner green">
+          <div className="bg-gradient-to-r from-acc-green to-acc-green/90 text-white rounded-2xl p-5 flex items-center justify-between shadow-md shadow-acc-green/10">
             <div>
-              <div className="accent-banner-label">Total Modal Pembelian (+ Fee Beli)</div>
-              <div className="accent-banner-value">{formatIDR(result.rincian.totalModal)}</div>
+              <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-85">Total Modal Pembelian (+ Fee Beli)</div>
+              <div className="text-xl sm:text-2xl font-extrabold mt-1">{formatIDR(result.rincian.totalModal)}</div>
             </div>
-            <div className="accent-banner-icon">
+            <div>
               <DollarSign size={24} />
             </div>
           </div>
 
           {/* Skenario Untung Box */}
-          <div
-            style={{
-              background: 'var(--bg-sub-green)',
-              borderRadius: '14px',
-              padding: '1rem',
-              marginBottom: '0.85rem',
-              border: '1px solid var(--accent-green)',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '0.5rem',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  fontWeight: 800,
-                  color: 'var(--accent-green)',
-                }}
-              >
+          <div className="bg-sub-green border border-acc-green rounded-2xl p-4 mt-4 mb-3">
+            <div className="flex items-center justify-between mb-3 border-b border-acc-green/10 pb-2">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-acc-green">
                 <TrendingUp size={18} />
                 <span>SKENARIO TARGET UNTUNG (TAKE PROFIT)</span>
               </div>
-              <span style={{ fontWeight: 800, color: 'var(--accent-green)', fontSize: '0.95rem' }}>
+              <span className="font-bold text-acc-green text-sm">
                 +{result.skenarioUntung.persentase}%
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <span className="sub-box-label">Harga Jual Valid BEI (Ceil)</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Harga Jual Valid BEI (Ceil)</span>
+                <div className="text-base sm:text-lg font-extrabold text-main">
                   {formatIDR(result.skenarioUntung.hargaBEI)}
                 </div>
               </div>
               <div>
-                <span className="sub-box-label">Profit Bersih Real</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-green)' }}>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Profit Bersih Real</span>
+                <div className="text-base sm:text-lg font-extrabold text-acc-green">
                   +{formatIDR(result.skenarioUntung.labaBersihReal)}
                 </div>
               </div>
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+            <div className="text-[10px] text-muted mt-2">
               Harga Exact Matematik: {formatIDR(result.skenarioUntung.hargaExact)}
             </div>
           </div>
 
           {/* Skenario Rugi Box */}
-          <div
-            style={{
-              background: 'var(--bg-sub-pink)',
-              borderRadius: '14px',
-              padding: '1rem',
-              border: '1px solid var(--accent-pink)',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '0.5rem',
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.4rem',
-                  fontWeight: 800,
-                  color: 'var(--accent-pink)',
-                }}
-              >
+          <div className="bg-sub-pink border border-acc-pink rounded-2xl p-4">
+            <div className="flex items-center justify-between mb-3 border-b border-acc-pink/10 pb-2">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-acc-pink">
                 <TrendingDown size={18} />
                 <span>SKENARIO BATAS RUGI (STOP LOSS)</span>
               </div>
-              <span style={{ fontWeight: 800, color: 'var(--accent-pink)', fontSize: '0.95rem' }}>
+              <span className="font-bold text-acc-pink text-sm">
                 {result.skenarioRugi.persentase}%
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <span className="sub-box-label">Harga Jual Valid BEI (Floor)</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Harga Jual Valid BEI (Floor)</span>
+                <div className="text-base sm:text-lg font-extrabold text-main">
                   {formatIDR(result.skenarioRugi.hargaBEI)}
                 </div>
               </div>
               <div>
-                <span className="sub-box-label">Rugi Bersih Real</span>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-pink)' }}>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Rugi Bersih Real</span>
+                <div className="text-base sm:text-lg font-extrabold text-acc-pink">
                   -{formatIDR(result.skenarioRugi.rugiBersihReal)}
                 </div>
               </div>
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.35rem' }}>
+            <div className="text-[10px] text-muted mt-2">
               Harga Exact Matematik: {formatIDR(result.skenarioRugi.hargaExact)}
             </div>
           </div>

@@ -18,9 +18,15 @@ import {
   Share2,
   TrendingUp,
   FileText,
+  Menu,
+  X,
+  User,
+  ChevronDown,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import Link from 'next/link';
-import { FractionRule, DEFAULT_FRACTION_RULES, formatNumber } from '@/lib/calculations';
+import { FractionRule, DEFAULT_FRACTION_RULES, formatNumber, formatIDR } from '@/lib/calculations';
 
 type Tab = 'analytics' | 'fractions' | 'ara-arb' | 'security' | 'terms';
 
@@ -40,6 +46,11 @@ export default function AdminDashboardPage() {
   const [saving, setSaving] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('analytics');
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+
+  // Theme support in admin
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   // Rules states
   const [fractions, setFractions] = useState<FractionRule[]>(DEFAULT_FRACTION_RULES);
@@ -114,7 +125,19 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     loadData();
+    // Get theme
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    setTheme(initialTheme);
   }, [router]);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
+  };
 
   const handleSaveRules = async () => {
     setSaving(true);
@@ -212,19 +235,20 @@ export default function AdminDashboardPage() {
     router.push('/login');
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 11) return 'Pagi Insan Trader...';
+    if (hour < 15) return 'Siang Insan Trader...';
+    if (hour < 18) return 'Sore Insan Trader...';
+    return 'Malam Insan Trader...';
+  };
+
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--bg-page)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700 }}>
-          <RefreshCw size={20} className="animate-spin" /> Memuat Admin Panel...
+      <div className="min-h-screen flex items-center justify-center bg-page text-main">
+        <div className="flex items-center gap-2.5 font-bold">
+          <RefreshCw size={20} className="animate-spin text-acc-blue" />
+          <span>Memuat Admin Panel...</span>
         </div>
       </div>
     );
@@ -232,103 +256,214 @@ export default function AdminDashboardPage() {
 
   if (!authenticated) return null;
 
+  const tabsInfo = [
+    { id: 'analytics' as Tab, label: 'Dashboard', icon: BarChart3 },
+    { id: 'fractions' as Tab, label: 'Fraksi Harga BEI', icon: ListRestart },
+    { id: 'ara-arb' as Tab, label: 'Aturan ARA / ARB', icon: Percent },
+    { id: 'terms' as Tab, label: 'Syarat & Ketentuan', icon: FileText },
+    { id: 'security' as Tab, label: 'Ganti Password', icon: Lock },
+  ];
+
+  const activeTabLabel = tabsInfo.find(t => t.id === activeTab)?.label || 'Dashboard';
+
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-page)' }}>
-      {/* Header Bar */}
-      <div className="admin-header">
-        <div
-          style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Link href="/" className="btn-secondary" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>
-              <ArrowLeft size={16} /> Lihat Website
-            </Link>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800 }}>
-              <ShieldCheck size={22} color="var(--accent-blue)" />
-              <span>Admin Panel CMS</span>
-            </div>
+    <div className="min-h-screen flex bg-page text-main transition-colors duration-300">
+      
+      {/* SIDEBAR FOR DESKTOP */}
+      <aside className="hidden md:flex flex-col w-64 bg-card border-r border-border-custom transition-colors duration-300">
+        {/* Brand Logo */}
+        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-border-custom">
+          <div className="w-8 h-8 rounded-lg bg-amber-500 text-black flex items-center justify-center font-bold">
+            KS
           </div>
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)' }}>
-            Signed in as Admin
-          </span>
+          <span className="font-extrabold text-sm tracking-wider uppercase">Kalkulator Saham</span>
         </div>
-      </div>
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }} className="admin-wrapper">
-        {/* Sidebar Nav */}
-        <aside className="admin-sidebar">
-          <div className="admin-sidebar-nav">
-            <button
-              onClick={() => { setActiveTab('analytics'); setMessage(null); }}
-              className={`admin-sidebar-btn ${activeTab === 'analytics' ? 'active' : ''}`}
-            >
-              <BarChart3 size={18} />
-              <span>Analitik Trafik</span>
-            </button>
+        {/* Master Menu Label */}
+        <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase">
+          Master Menu
+        </div>
 
-            <button
-              onClick={() => { setActiveTab('fractions'); setMessage(null); }}
-              className={`admin-sidebar-btn ${activeTab === 'fractions' ? 'active' : ''}`}
-            >
-              <ListRestart size={18} />
-              <span>Fraksi Harga BEI</span>
-            </button>
+        {/* Sidebar Nav Links */}
+        <nav className="flex-1 px-4 space-y-1.5">
+          {tabsInfo.map((tabItem) => {
+            const Icon = tabItem.icon;
+            const isActive = activeTab === tabItem.id;
+            return (
+              <button
+                key={tabItem.id}
+                onClick={() => {
+                  setActiveTab(tabItem.id);
+                  setMessage(null);
+                }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-amber-500 text-black shadow-md shadow-amber-500/10'
+                    : 'text-sub hover:bg-sub-slate hover:text-main'
+                }`}
+              >
+                <Icon size={16} />
+                <span>{tabItem.label}</span>
+              </button>
+            );
+          })}
+        </nav>
 
-            <button
-              onClick={() => { setActiveTab('ara-arb'); setMessage(null); }}
-              className={`admin-sidebar-btn ${activeTab === 'ara-arb' ? 'active' : ''}`}
-            >
-              <Percent size={18} />
-              <span>Aturan ARA / ARB</span>
-            </button>
-
-            <button
-              onClick={() => { setActiveTab('terms'); setMessage(null); }}
-              className={`admin-sidebar-btn ${activeTab === 'terms' ? 'active' : ''}`}
-            >
-              <FileText size={18} />
-              <span>Syarat & Ketentuan</span>
-            </button>
-
-            <button
-              onClick={() => { setActiveTab('security'); setMessage(null); }}
-              className={`admin-sidebar-btn ${activeTab === 'security' ? 'active' : ''}`}
-            >
-              <Lock size={18} />
-              <span>Ganti Password</span>
-            </button>
-          </div>
-
+        {/* Sidebar Footer / Logout */}
+        <div className="p-4 border-t border-border-custom">
           <button
             onClick={handleLogout}
-            className="admin-sidebar-btn"
-            style={{ color: 'var(--accent-pink)', marginTop: '2rem' }}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-acc-pink hover:bg-sub-pink transition-all duration-200 cursor-pointer"
           >
-            <LogOut size={18} />
+            <LogOut size={16} />
             <span>Keluar Sesi</span>
           </button>
-        </aside>
+        </div>
+      </aside>
 
-        {/* Main Content Area */}
-        <main className="admin-body">
+      {/* MOBILE DRAWER SIDEBAR */}
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 flex md:hidden bg-black/50 backdrop-blur-sm">
+          <div className="w-64 bg-card h-full flex flex-col border-r border-border-custom animate-slide-in">
+            <div className="h-16 flex items-center justify-between px-6 border-b border-border-custom">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-amber-500 text-black flex items-center justify-center font-bold">
+                  KS
+                </div>
+                <span className="font-extrabold text-sm tracking-wider uppercase">Kalkulator Saham</span>
+              </div>
+              <button onClick={() => setMobileSidebarOpen(false)} className="text-main">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase">
+              Master Menu
+            </div>
+
+            <nav className="flex-grow px-4 space-y-1.5">
+              {tabsInfo.map((tabItem) => {
+                const Icon = tabItem.icon;
+                const isActive = activeTab === tabItem.id;
+                return (
+                  <button
+                    key={tabItem.id}
+                    onClick={() => {
+                      setActiveTab(tabItem.id);
+                      setMessage(null);
+                      setMobileSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+                      isActive
+                        ? 'bg-amber-500 text-black shadow-md'
+                        : 'text-sub hover:bg-sub-slate'
+                    }`}
+                  >
+                    <Icon size={16} />
+                    <span>{tabItem.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="p-4 border-t border-border-custom">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-acc-pink hover:bg-sub-pink transition-all duration-200 cursor-pointer"
+              >
+                <LogOut size={16} />
+                <span>Keluar Sesi</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MAIN CONTAINER */}
+      <div className="flex-1 flex flex-col min-w-0">
+        
+        {/* TOP BAR */}
+        <header className="h-16 bg-card border-b border-border-custom flex items-center justify-between px-4 sm:px-6 z-10 transition-colors duration-300">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className="p-1.5 rounded-lg text-main hover:bg-sub-slate md:hidden"
+            >
+              <Menu size={22} />
+            </button>
+            <h1 className="font-extrabold text-lg tracking-tight capitalize text-main">
+              {activeTabLabel}
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {/* View Website Link */}
+            <Link
+              href="/"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-sub hover:text-acc-blue bg-sub-slate px-3 py-2 rounded-xl transition-all"
+            >
+              <ArrowLeft size={14} />
+              <span>Lihat Website</span>
+            </Link>
+
+            {/* Theme Toggle in Topbar */}
+            <button
+              onClick={toggleTheme}
+              className="w-9 h-9 rounded-xl border border-border-custom flex items-center justify-center text-main hover:text-acc-blue hover:border-acc-blue cursor-pointer transition-colors"
+              title="Ganti Tema"
+            >
+              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+            </button>
+
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                className="flex items-center gap-2 bg-sub-slate/50 hover:bg-sub-slate border border-border-custom px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-main"
+              >
+                <div className="w-5 h-5 rounded-full bg-amber-500 text-black flex items-center justify-center font-bold text-[10px]">
+                  A
+                </div>
+                <span className="hidden sm:inline">admin@credisuite.com</span>
+                <ChevronDown size={14} className="opacity-60" />
+              </button>
+
+              {profileDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-20" onClick={() => setProfileDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-56 bg-card border border-border-custom rounded-2xl shadow-xl z-30 p-2 text-main animate-fade-in">
+                    <div className="px-3 py-2.5 border-b border-border-custom">
+                      <p className="text-[10px] font-bold text-muted uppercase tracking-wider">{getGreeting()}</p>
+                      <p className="text-xs font-extrabold mt-0.5 truncate text-main">Administrator</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        handleLogout();
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 mt-1 rounded-xl text-left text-xs font-bold text-acc-pink hover:bg-sub-pink transition-colors cursor-pointer"
+                    >
+                      <LogOut size={15} />
+                      <span>Logout Sesi</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* MAIN BODY CONTENT */}
+        <main className="flex-grow p-4 sm:p-6 overflow-y-auto max-w-7xl w-full mx-auto space-y-6">
+          
+          {/* Action Feedback Messages */}
           {message && (
             <div
-              style={{
-                padding: '1rem',
-                borderRadius: '12px',
-                fontWeight: 700,
-                fontSize: '0.9rem',
-                marginBottom: '1.5rem',
-                background: message.type === 'success' ? 'var(--bg-sub-green)' : 'var(--bg-sub-pink)',
-                color: message.type === 'success' ? 'var(--accent-green)' : 'var(--accent-pink)',
-                border: `1px solid ${message.type === 'success' ? 'var(--accent-green)' : 'var(--accent-pink)'}`,
-              }}
+              className={`p-4 rounded-2xl font-bold text-xs border animate-fade-in ${
+                message.type === 'success'
+                  ? 'bg-sub-green border-acc-green text-acc-green'
+                  : 'bg-sub-pink border-acc-pink text-acc-pink'
+              }`}
             >
               {message.text}
             </div>
@@ -336,179 +471,96 @@ export default function AdminDashboardPage() {
 
           {/* TAB 1: ANALYTICS */}
           {activeTab === 'analytics' && (
-            <div>
-              <div className="section-header">
-                <div className="section-breadcrumb">Analitik</div>
-                <h2 className="section-title">Pemantauan Trafik & Aktivitas Pengguna</h2>
+            <div className="space-y-6">
+              
+              {/* Analytics Header Title */}
+              <div>
+                <div className="text-[10px] font-bold text-acc-blue uppercase tracking-widest">Analytics Overview</div>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-main mt-0.5">Pemantauan Trafik & Aktivitas Pengguna</h2>
               </div>
 
-              {/* Stat Cards */}
-              <div className="analytics-summary-grid">
-                <div className="stat-card">
-                  <div>
-                    <span className="stat-label">Total Kunjungan</span>
-                    <div className="stat-val">{formatNumber(analytics?.summary.totalTraffic || 0)}</div>
+              {/* STATS CARD GRID */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* CARD 1: USERS (TRAFFIC) */}
+                <div className="bg-gradient-to-br from-blue-600 to-blue-500 text-white rounded-3xl p-6 shadow-lg shadow-blue-500/10 flex flex-col justify-between h-44 relative overflow-hidden">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-[10px] font-extrabold tracking-widest uppercase opacity-75 block">Total Users</span>
+                      <span className="text-3xl font-extrabold block mt-2">{formatNumber(analytics?.summary.totalTraffic || 0)}</span>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <User size={20} className="text-white" />
+                    </div>
                   </div>
-                  <div className="stat-icon" style={{ background: 'var(--bg-sub-blue)', color: 'var(--accent-blue)' }}>
-                    <BarChart3 size={24} />
+                  <div className="flex justify-between items-center text-[10px] font-bold border-t border-white/10 pt-4 mt-auto">
+                    <span>ACTIVE NOW: <strong className="text-white text-xs ml-0.5">1</strong></span>
+                    <span>DAILY ACTIVE: <strong className="text-white text-xs ml-0.5">1</strong></span>
                   </div>
                 </div>
 
-                <div className="stat-card">
-                  <div>
-                    <span className="stat-label">Unduh Gambar PNG</span>
-                    <div className="stat-val">{formatNumber(analytics?.summary.totalDownloads || 0)}</div>
+                {/* CARD 2: DOWNLOADS */}
+                <div className="bg-gradient-to-br from-purple-600 to-purple-500 text-white rounded-3xl p-6 shadow-lg shadow-purple-500/10 flex flex-col justify-between h-44 relative overflow-hidden">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-[10px] font-extrabold tracking-widest uppercase opacity-75 block">Unduh Gambar PNG</span>
+                      <span className="text-3xl font-extrabold block mt-2">{formatNumber(analytics?.summary.totalDownloads || 0)}</span>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <Download size={20} className="text-white" />
+                    </div>
                   </div>
-                  <div className="stat-icon" style={{ background: 'var(--bg-sub-green)', color: 'var(--accent-green)' }}>
-                    <Download size={24} />
+                  <div className="flex justify-between items-center text-[10px] font-bold border-t border-white/10 pt-4 mt-auto">
+                    <span>ACTIVE ADS / CALC: <strong className="text-white text-xs ml-0.5">3</strong></span>
+                    <span>CAMPAIGNS / ACTIONS: <strong className="text-white text-xs ml-0.5">14</strong></span>
                   </div>
                 </div>
 
-                <div className="stat-card">
-                  <div>
-                    <span className="stat-label">Total Bagikan</span>
-                    <div className="stat-val">{formatNumber(analytics?.summary.totalShares || 0)}</div>
-                  </div>
-                  <div className="stat-icon" style={{ background: 'var(--bg-sub-pink)', color: 'var(--accent-pink)' }}>
-                    <Share2 size={24} />
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '2rem' }}>
-                {/* Referrers */}
-                <div className="flat-card">
-                  <div>
-                    <div className="card-top">
-                      <span className="card-title-text">Sumber Trafik Masuk (Referrer)</span>
+                {/* CARD 3: SHARES */}
+                <div className="bg-gradient-to-br from-emerald-600 to-emerald-500 text-white rounded-3xl p-6 shadow-lg shadow-emerald-500/10 flex flex-col justify-between h-44 relative overflow-hidden">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="text-[10px] font-extrabold tracking-widest uppercase opacity-75 block">Total Bagikan</span>
+                      <span className="text-3xl font-extrabold block mt-2">{formatNumber(analytics?.summary.totalShares || 0)}</span>
                     </div>
-                    <div className="table-container">
-                      <table className="flat-table">
-                        <thead>
-                          <tr>
-                            <th>Sumber / Rujukan</th>
-                            <th>Jumlah Kunjungan</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {analytics?.referrers.map((ref, idx) => (
-                            <tr key={idx}>
-                              <td style={{ fontWeight: 600 }}>{ref.name}</td>
-                              <td>{formatNumber(ref.value)}</td>
-                            </tr>
-                          ))}
-                          {(!analytics?.referrers || analytics.referrers.length === 0) && (
-                            <tr>
-                              <td colSpan={2} style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                                Belum ada data kunjungan.
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <Share2 size={20} className="text-white" />
                     </div>
                   </div>
-                </div>
-
-                {/* Calculator action usage stats */}
-                <div className="flat-card">
-                  <div>
-                    <div className="card-top">
-                      <span className="card-title-text">Aktivitas per Kalkulator</span>
-                    </div>
-                    <div className="table-container">
-                      <table className="flat-table">
-                        <thead>
-                          <tr>
-                            <th>Jenis Kalkulator</th>
-                            <th>Unduh PNG</th>
-                            <th>Bagikan PNG</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td style={{ fontWeight: 600 }}>ARA / ARB Limit</td>
-                            <td className="val-green" style={{ fontWeight: 700 }}>
-                              {analytics?.calculatorStats['ara-arb']?.download || 0}
-                            </td>
-                            <td className="val-blue" style={{ fontWeight: 700 }}>
-                              {analytics?.calculatorStats['ara-arb']?.share || 0}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style={{ fontWeight: 600 }}>Average Up/Down</td>
-                            <td className="val-green" style={{ fontWeight: 700 }}>
-                              {analytics?.calculatorStats['average']?.download || 0}
-                            </td>
-                            <td className="val-blue" style={{ fontWeight: 700 }}>
-                              {analytics?.calculatorStats['average']?.share || 0}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style={{ fontWeight: 600 }}>Prediksi Jual/Beli</td>
-                            <td className="val-green" style={{ fontWeight: 700 }}>
-                              {analytics?.calculatorStats['prediction']?.download || 0}
-                            </td>
-                            <td className="val-blue" style={{ fontWeight: 700 }}>
-                              {analytics?.calculatorStats['prediction']?.share || 0}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                  <div className="flex justify-between items-center text-[10px] font-bold border-t border-white/10 pt-4 mt-auto">
+                    <span>TICKET SOLD / EXPORTS: <strong className="text-white text-xs ml-0.5">0</strong></span>
+                    <span>TOTAL REVENUE: <strong className="text-white text-xs ml-0.5">Rp 0</strong></span>
                   </div>
                 </div>
               </div>
 
-              {/* Recent Actions Log */}
-              <div className="flat-card">
-                <div>
-                  <div className="card-top">
-                    <span className="card-title-text">Log Aktivitas Pengguna Terbaru (Download / Share)</span>
-                  </div>
-                  <div className="table-container">
-                    <table className="flat-table">
+              {/* TRAFFIC & ACTION DETAILS */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                {/* Traffic Source Table */}
+                <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm transition-colors duration-300">
+                  <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
+                    Sumber Trafik Masuk (Referrer)
+                  </h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left border-collapse">
                       <thead>
-                        <tr>
-                          <th>Waktu</th>
-                          <th>Kalkulator</th>
-                          <th>Aksi</th>
+                        <tr className="border-b border-border-custom text-muted font-bold">
+                          <th className="py-2.5">Sumber / Rujukan</th>
+                          <th className="py-2.5 text-right">Jumlah Kunjungan</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {analytics?.recentActions.map((log) => (
-                          <tr key={log.id}>
-                            <td style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
-                              {new Date(log.timestamp).toLocaleString('id-ID')}
-                            </td>
-                            <td style={{ fontWeight: 600 }}>
-                              {log.calculatorType === 'ara-arb'
-                                ? 'ARA / ARB Limit'
-                                : log.calculatorType === 'average'
-                                ? 'Average Up/Down'
-                                : 'Prediksi Jual/Beli'}
-                            </td>
-                            <td>
-                              <span
-                                style={{
-                                  fontSize: '0.75rem',
-                                  fontWeight: 700,
-                                  textTransform: 'uppercase',
-                                  padding: '0.2rem 0.5rem',
-                                  borderRadius: '6px',
-                                  background: log.action === 'download' ? 'var(--bg-sub-green)' : 'var(--bg-sub-blue)',
-                                  color: log.action === 'download' ? 'var(--accent-green)' : 'var(--accent-blue)',
-                                }}
-                              >
-                                {log.action}
-                              </span>
-                            </td>
+                      <tbody className="divide-y divide-border-custom/50">
+                        {analytics?.referrers.map((ref, idx) => (
+                          <tr key={idx} className="hover:bg-sub-slate/30 text-main">
+                            <td className="py-3 font-semibold">{ref.name}</td>
+                            <td className="py-3 text-right font-bold">{formatNumber(ref.value)}</td>
                           </tr>
                         ))}
-                        {(!analytics?.recentActions || analytics.recentActions.length === 0) && (
+                        {(!analytics?.referrers || analytics.referrers.length === 0) && (
                           <tr>
-                            <td colSpan={3} style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                              Belum ada log aktivitas.
+                            <td colSpan={2} className="py-6 text-center text-muted font-semibold">
+                              Belum ada data kunjungan.
                             </td>
                           </tr>
                         )}
@@ -516,39 +568,137 @@ export default function AdminDashboardPage() {
                     </table>
                   </div>
                 </div>
+
+                {/* Calculator action usage stats */}
+                <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm transition-colors duration-300">
+                  <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
+                    Aktivitas per Kalkulator
+                  </h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left border-collapse">
+                      <thead>
+                        <tr className="border-b border-border-custom text-muted font-bold">
+                          <th className="py-2.5">Jenis Kalkulator</th>
+                          <th className="py-2.5 text-center">Unduh PNG</th>
+                          <th className="py-2.5 text-center">Bagikan PNG</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border-custom/50 text-main">
+                        <tr className="hover:bg-sub-slate/30">
+                          <td className="py-3 font-semibold">ARA / ARB Limit</td>
+                          <td className="py-3 text-center font-bold text-acc-green">
+                            {analytics?.calculatorStats['ara-arb']?.download || 0}
+                          </td>
+                          <td className="py-3 text-center font-bold text-acc-blue">
+                            {analytics?.calculatorStats['ara-arb']?.share || 0}
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-sub-slate/30">
+                          <td className="py-3 font-semibold">Average Up/Down</td>
+                          <td className="py-3 text-center font-bold text-acc-green">
+                            {analytics?.calculatorStats['average']?.download || 0}
+                          </td>
+                          <td className="py-3 text-center font-bold text-acc-blue">
+                            {analytics?.calculatorStats['average']?.share || 0}
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-sub-slate/30">
+                          <td className="py-3 font-semibold">Prediksi Jual/Beli</td>
+                          <td className="py-3 text-center font-bold text-acc-green">
+                            {analytics?.calculatorStats['prediction']?.download || 0}
+                          </td>
+                          <td className="py-3 text-center font-bold text-acc-blue">
+                            {analytics?.calculatorStats['prediction']?.share || 0}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              {/* Log Aktivitas Terbaru */}
+              <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm transition-colors duration-300">
+                <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
+                  Log Aktivitas Pengguna Terbaru (Download / Share)
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-border-custom text-muted font-bold">
+                        <th className="py-2.5">Waktu</th>
+                        <th className="py-2.5">Kalkulator</th>
+                        <th className="py-2.5 text-right">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border-custom/50 text-main">
+                      {analytics?.recentActions.map((log) => (
+                        <tr key={log.id} className="hover:bg-sub-slate/30">
+                          <td className="py-3 text-muted">
+                            {new Date(log.timestamp).toLocaleString('id-ID')}
+                          </td>
+                          <td className="py-3 font-semibold">
+                            {log.calculatorType === 'ara-arb'
+                              ? 'ARA / ARB Limit'
+                              : log.calculatorType === 'average'
+                              ? 'Average Up/Down'
+                              : 'Prediksi Jual/Beli'}
+                          </td>
+                          <td className="py-3 text-right">
+                            <span
+                              className={`inline-block text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border ${
+                                log.action === 'download'
+                                  ? 'bg-sub-green border-acc-green/20 text-acc-green'
+                                  : 'bg-sub-blue border-acc-blue/20 text-acc-blue'
+                              }`}
+                            >
+                              {log.action}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                      {(!analytics?.recentActions || analytics.recentActions.length === 0) && (
+                        <tr>
+                          <td colSpan={3} className="py-6 text-center text-muted font-semibold">
+                            Belum ada log aktivitas.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
 
           {/* TAB 2: FRACTIONS */}
           {activeTab === 'fractions' && (
-            <div className="flat-card">
+            <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm transition-colors duration-300">
               <div>
-                <div className="card-top">
-                  <span className="card-title-text">Tabel Fraksi Harga BEI (Tick Size)</span>
-                </div>
-                <p className="form-label" style={{ fontWeight: 500, color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
+                  Tabel Fraksi Harga BEI (Tick Size)
+                </h3>
+                <p className="text-xs text-muted mb-6 leading-relaxed">
                   Kelola tingkatan fraksi harga saham dan kelipatan perubahan harganya (tick size) di Bursa Efek Indonesia.
                 </p>
 
-                <div className="table-container">
-                  <table className="flat-table">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-left border-collapse">
                     <thead>
-                      <tr>
-                        <th>Harga Min (Rp)</th>
-                        <th>Harga Max (Rp)</th>
-                        <th>Tick Size (Rp)</th>
-                        <th>Aksi</th>
+                      <tr className="border-b border-border-custom text-muted font-bold">
+                        <th className="py-2.5">Harga Min (Rp)</th>
+                        <th className="py-2.5">Harga Max (Rp)</th>
+                        <th className="py-2.5">Tick Size (Rp)</th>
+                        <th className="py-2.5 text-right">Aksi</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-border-custom/50">
                       {fractions.map((f, idx) => (
-                        <tr key={idx}>
-                          <td>
+                        <tr key={idx} className="hover:bg-sub-slate/30 text-main">
+                          <td className="py-2.5">
                             <input
                               type="number"
-                              className="form-input"
-                              style={{ padding: '0.4rem 0.6rem' }}
+                              className="bg-page border border-border-custom rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-amber-500 w-32"
                               value={f.minPrice}
                               onChange={(e) => {
                                 const newFractions = [...fractions];
@@ -557,11 +707,10 @@ export default function AdminDashboardPage() {
                               }}
                             />
                           </td>
-                          <td>
+                          <td className="py-2.5">
                             <input
                               type="text"
-                              className="form-input"
-                              style={{ padding: '0.4rem 0.6rem' }}
+                              className="bg-page border border-border-custom rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-amber-500 w-32"
                               value={f.maxPrice === Infinity ? 'Infinity' : f.maxPrice}
                               onChange={(e) => {
                                 const newFractions = [...fractions];
@@ -571,11 +720,10 @@ export default function AdminDashboardPage() {
                               }}
                             />
                           </td>
-                          <td>
+                          <td className="py-2.5">
                             <input
                               type="number"
-                              className="form-input"
-                              style={{ padding: '0.4rem 0.6rem' }}
+                              className="bg-page border border-border-custom rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-amber-500 w-32"
                               value={f.tick}
                               onChange={(e) => {
                                 const newFractions = [...fractions];
@@ -584,11 +732,10 @@ export default function AdminDashboardPage() {
                               }}
                             />
                           </td>
-                          <td>
+                          <td className="py-2.5 text-right">
                             <button
                               onClick={() => setFractions(fractions.filter((_, i) => i !== idx))}
-                              className="btn-icon-danger"
-                              style={{ width: '32px', height: '32px' }}
+                              className="bg-sub-pink border border-acc-pink text-acc-pink w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer hover:bg-acc-pink hover:text-white transition-colors ml-auto"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -599,16 +746,20 @@ export default function AdminDashboardPage() {
                   </table>
                 </div>
 
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+                <div className="flex flex-wrap gap-3 mt-6 border-t border-border-custom pt-5">
                   <button
                     onClick={() => setFractions([...fractions, { minPrice: 0, maxPrice: 0, tick: 1 }])}
-                    className="btn-secondary"
+                    className="flex items-center gap-1.5 bg-card border border-border-custom hover:border-amber-500 hover:text-amber-500 text-main font-bold py-2 px-4 rounded-xl text-xs transition-colors cursor-pointer"
                   >
-                    <Plus size={16} /> Tambah Baris Fraksi
+                    <Plus size={14} /> <span>Tambah Baris Fraksi</span>
                   </button>
 
-                  <button onClick={handleSaveRules} disabled={saving} className="btn-primary" style={{ width: 'auto' }}>
-                    <Save size={18} />
+                  <button
+                    onClick={handleSaveRules}
+                    disabled={saving}
+                    className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <Save size={14} />
                     <span>{saving ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
                   </button>
                 </div>
@@ -618,35 +769,35 @@ export default function AdminDashboardPage() {
 
           {/* TAB 3: ARA / ARB */}
           {activeTab === 'ara-arb' && (
-            <div className="flat-card">
+            <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm transition-colors duration-300">
               <div>
-                <div className="card-top">
-                  <span className="card-title-text">Persentase Batas Auto Rejection</span>
-                </div>
-                <p className="form-label" style={{ fontWeight: 500, color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
+                  Persentase Batas Auto Rejection
+                </h3>
+                <p className="text-xs text-muted mb-6 leading-relaxed">
                   Atur persentase Auto Rejection Atas (ARA) dan Auto Rejection Bawah (ARB) untuk masing-masing klasifikasi papan.
                 </p>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '500px' }}>
-                  <div style={{ background: 'var(--bg-sub-slate)', padding: '1.25rem', borderRadius: '14px' }}>
-                    <div style={{ fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+                <div className="flex flex-col gap-4 max-w-xl">
+                  <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
+                    <h4 className="font-extrabold text-xs text-main tracking-wide mb-3">
                       Papan Utama & Papan Pengembangan
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                      <div>
-                        <label className="form-label">ARA (%)</label>
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-muted block">ARA (%)</label>
                         <input
                           type="number"
-                          className="form-input"
+                          className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
                           value={araUtama}
                           onChange={(e) => setAraUtama(parseFloat(e.target.value) || 0)}
                         />
                       </div>
-                      <div>
-                        <label className="form-label">ARB (%)</label>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-muted block">ARB (%)</label>
                         <input
                           type="number"
-                          className="form-input"
+                          className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
                           value={arbUtama}
                           onChange={(e) => setArbUtama(parseFloat(e.target.value) || 0)}
                         />
@@ -654,25 +805,25 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  <div style={{ background: 'var(--bg-sub-slate)', padding: '1.25rem', borderRadius: '14px' }}>
-                    <div style={{ fontWeight: 800, marginBottom: '0.75rem', fontSize: '0.95rem' }}>
+                  <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
+                    <h4 className="font-extrabold text-xs text-main tracking-wide mb-3">
                       Papan Akselerasi & Papan Watchlist (FTS)
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                      <div>
-                        <label className="form-label">ARA (%)</label>
+                    </h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-muted block">ARA (%)</label>
                         <input
                           type="number"
-                          className="form-input"
+                          className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
                           value={araAkselerasi}
                           onChange={(e) => setAraAkselerasi(parseFloat(e.target.value) || 0)}
                         />
                       </div>
-                      <div>
-                        <label className="form-label">ARB (%)</label>
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-muted block">ARB (%)</label>
                         <input
                           type="number"
-                          className="form-input"
+                          className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
                           value={arbAkselerasi}
                           onChange={(e) => setArbAkselerasi(parseFloat(e.target.value) || 0)}
                         />
@@ -680,8 +831,12 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  <button onClick={handleSaveRules} disabled={saving} className="btn-primary" style={{ marginTop: '1rem' }}>
-                    <Save size={18} />
+                  <button
+                    onClick={handleSaveRules}
+                    disabled={saving}
+                    className="flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50 mt-2"
+                  >
+                    <Save size={15} />
                     <span>{saving ? 'Menyimpan...' : 'Simpan Persentase ARA/ARB'}</span>
                   </button>
                 </div>
@@ -691,30 +846,34 @@ export default function AdminDashboardPage() {
 
           {/* TAB: TERMS & CONDITIONS */}
           {activeTab === 'terms' && (
-            <div className="flat-card" style={{ maxWidth: '800px' }}>
+            <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm transition-colors duration-300 max-w-3xl">
               <div>
-                <div className="card-top">
-                  <span className="card-title-text">Syarat & Ketentuan Disclaimer</span>
-                </div>
-                <p className="form-label" style={{ fontWeight: 500, color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
+                  Syarat & Ketentuan Disclaimer
+                </h3>
+                <p className="text-xs text-muted mb-6 leading-relaxed">
                   Atur teks syarat & ketentuan (disclaimer) yang ditampilkan di bagian bawah website utama.
                 </p>
 
-                <form onSubmit={handleSaveTerms} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div className="form-group">
-                    <label className="form-label">Teks Syarat & Ketentuan</label>
+                <form onSubmit={handleSaveTerms} className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-muted block">Teks Syarat & Ketentuan</label>
                     <textarea
-                      className="form-input"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500 text-xs"
                       rows={6}
                       value={terms}
                       onChange={(e) => setTerms(e.target.value)}
                       required
-                      style={{ resize: 'vertical', fontFamily: 'inherit' }}
+                      style={{ resize: 'vertical' }}
                     />
                   </div>
 
-                  <button type="submit" disabled={saving} className="btn-primary" style={{ width: 'auto' }}>
-                    <Save size={18} />
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    <Save size={15} />
                     <span>{saving ? 'Menyimpan...' : 'Simpan Syarat & Ketentuan'}</span>
                   </button>
                 </form>
@@ -724,32 +883,32 @@ export default function AdminDashboardPage() {
 
           {/* TAB 4: SECURITY */}
           {activeTab === 'security' && (
-            <div className="flat-card" style={{ maxWidth: '500px' }}>
+            <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm transition-colors duration-300 max-w-md">
               <div>
-                <div className="card-top">
-                  <span className="card-title-text">Perbarui Keamanan Password</span>
-                </div>
-                <p className="form-label" style={{ fontWeight: 500, color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+                <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
+                  Perbarui Keamanan Password
+                </h3>
+                <p className="text-xs text-muted mb-6 leading-relaxed">
                   Ganti password keamanan Anda untuk membatasi akses Admin CMS.
                 </p>
 
-                <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div className="form-group">
-                    <label className="form-label">Password Lama</label>
+                <form onSubmit={handleChangePassword} className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-muted block">Password Lama</label>
                     <input
                       type="password"
-                      className="form-input"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500"
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       required
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Password Baru</label>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-muted block">Password Baru</label>
                     <input
                       type="password"
-                      className="form-input"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
@@ -757,19 +916,23 @@ export default function AdminDashboardPage() {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label className="form-label">Konfirmasi Password Baru</label>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-muted block">Konfirmasi Password Baru</label>
                     <input
                       type="password"
-                      className="form-input"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                     />
                   </div>
 
-                  <button type="submit" disabled={saving} className="btn-primary" style={{ marginTop: '0.5rem' }}>
-                    <Save size={18} />
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50 mt-2"
+                  >
+                    <Save size={15} />
                     <span>{saving ? 'Memperbarui...' : 'Perbarui Password Admin'}</span>
                   </button>
                 </form>

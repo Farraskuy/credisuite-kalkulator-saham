@@ -6,7 +6,6 @@ import AnalyticsTracker from '@/components/AnalyticsTracker';
 import DynamicDisclaimer from '@/components/DynamicDisclaimer';
 import { Metadata } from 'next';
 
-
 export const metadata: Metadata = {
   title: 'Kalkulator Saham BEI - Hitung ARA, ARB, Average & Target Untung Rugi',
   description:
@@ -23,20 +22,17 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div className="flex flex-col min-h-screen bg-page text-main transition-colors duration-300">
       <AnalyticsTracker />
       <Navbar />
 
-      <main className="app-container">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow space-y-12">
         {/* HERO SECTION */}
-        <section className="hero-section">
-          <div className="hero-subtitle-top">
-            <span>#1 KASIR & ALAT BANTU TRADING BEI</span>
-          </div>
-          <h1 className="hero-title">
-            Keputusan Saham Lebih <span>Presisi & Terukur</span>
+        <section className="text-center max-w-3xl mx-auto mt-8 mb-10 space-y-4">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-main">
+            Keputusan Saham Lebih <span className="text-acc-blue">Presisi & Terukur</span>
           </h1>
-          <p className="hero-desc">
+          <p className="text-base sm:text-lg text-muted max-w-2xl mx-auto">
             Tiga kalkulator analisis saham terlengkap dalam satu halaman. Disesuaikan secara otomatis
             dengan aturan fraksi harga (tick size) dan persentase Auto Rejection Bursa Efek Indonesia.
           </p>
@@ -52,9 +48,9 @@ export default function HomePage() {
         <PredictionSection />
       </main>
 
-      <footer className="site-footer">
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <p style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+      <footer className="border-t border-border-custom bg-card/50 py-8 text-center mt-auto px-4">
+        <div className="max-w-7xl mx-auto">
+          <p className="font-bold text-main mb-1.5">
             KalkulatorSaham.id • Alat Analisis Saham BEI
           </p>
           <DynamicDisclaimer />

@@ -24,5 +24,5 @@ export default function DynamicDisclaimer() {
     fetchTerms();
   }, []);
 
-  return <p>{terms}</p>;
+  return <p className="text-xs text-muted max-w-3xl mx-auto leading-relaxed mt-2">{terms}</p>;
 }

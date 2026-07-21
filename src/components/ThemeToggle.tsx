@@ -24,7 +24,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="theme-toggle-btn"
+      className="bg-card border border-border-custom text-main w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-200 hover:border-acc-blue hover:text-acc-blue"
       title={theme === 'light' ? 'Beralih ke Dark Mode' : 'Beralih ke Light Mode'}
       aria-label="Toggle theme"
     >
