@@ -8,6 +8,8 @@ import WebsiteBrand from '@/components/WebsiteBrand';
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
 
+export const revalidate = 60; // Revalidate database rules cache every 60 seconds
+
 export const metadata: Metadata = {
   title: 'Kalkulator Saham BEI - Hitung ARA, ARB, Average & Target Untung Rugi',
   description:
