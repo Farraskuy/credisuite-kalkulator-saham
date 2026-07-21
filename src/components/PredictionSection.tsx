@@ -33,21 +33,27 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
     fractionRules
   );
 
+  const handleTickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Validasi JS: Hapus semua karakter non-huruf (angka & simbol) dan batasi maksimal 4 karakter
+    const cleanTicker = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 4).toUpperCase();
+    setTicker(cleanTicker);
+  };
+
   const handleNumChange = (setter: (val: number) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawVal = e.target.value.replace(/\D/g, '');
     setter(rawVal ? parseInt(rawVal, 10) : 0);
   };
 
   const cleanFileName = clientName 
-    ? `kalkulator-prediksi-${ticker.toUpperCase()}-${clientName.replace(/\s+/g, '-')}` 
-    : `kalkulator-prediksi-${ticker.toUpperCase()}`;
+    ? `kalkulator-prediksi-${ticker}-${clientName.replace(/\s+/g, '-')}` 
+    : `kalkulator-prediksi-${ticker}`;
 
   return (
     <section id="prediction" className="space-y-6 scroll-mt-20">
       <div className="border-b border-border-custom pb-4">
         <div className="text-xs font-bold text-acc-green uppercase tracking-wider">Kalkulator #3</div>
         <h2 className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5 text-main mt-1">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-green  shadow-acc-green/20">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-green shadow-sm shadow-acc-green/20">
             <Target size={20} />
           </div>
           Prediksi Jual / Beli & Target Untung Rugi
@@ -56,7 +62,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* Left Form Card */}
-        <div className="bg-card  rounded-3xl p-6 sm:p-8  flex flex-col justify-between min-h-[440px]">
+        <div className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[440px]">
           <div>
             <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-6">
               <div className="flex items-center gap-3">
@@ -70,16 +76,15 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div className="space-y-1">
                 <label htmlFor="pred-ticker" className="text-xs font-bold text-muted block">
-                  Kode Ticker Saham
+                  Kode Ticker Saham (Max 4 Huruf)
                 </label>
                 <input
                   id="pred-ticker"
                   type="text"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-bold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all uppercase placeholder-gray-400"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-bold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all uppercase placeholder-gray-400"
                   value={ticker}
-                  onChange={(e) => setTicker(e.target.value)}
+                  onChange={handleTickerChange}
                   placeholder="e.g. BBRI"
-                  required
                 />
               </div>
 
@@ -90,7 +95,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                 <input
                   id="pred-name"
                   type="text"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all placeholder-gray-400"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all placeholder-gray-400"
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="e.g. Budi"
@@ -107,7 +112,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                   id="pred-price"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={hargaBeli ? formatNumber(hargaBeli) : ''}
                   onChange={handleNumChange(setHargaBeli)}
                   placeholder="e.g. 1000"
@@ -122,7 +127,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                   id="pred-lot"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={lot ? formatNumber(lot) : ''}
                   onChange={handleNumChange(setLot)}
                   placeholder="e.g. 10"
@@ -139,7 +144,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                   id="pred-feebeli"
                   type="number"
                   step="0.01"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={feeBeli}
                   onChange={(e) => setFeeBeli(parseFloat(e.target.value) || 0)}
                 />
@@ -153,7 +158,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                   id="pred-feejual"
                   type="number"
                   step="0.01"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={feeJual}
                   onChange={(e) => setFeeJual(parseFloat(e.target.value) || 0)}
                 />
@@ -169,7 +174,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                   id="pred-profit"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={targetUntungRp ? formatNumber(targetUntungRp) : ''}
                   onChange={handleNumChange(setTargetUntungRp)}
                   placeholder="e.g. 250000"
@@ -184,7 +189,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                   id="pred-loss"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
+                  className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={targetRugiRp ? formatNumber(targetRugiRp) : ''}
                   onChange={handleNumChange(setTargetRugiRp)}
                   placeholder="e.g. 100000"
@@ -202,7 +207,9 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                 <DollarSign size={20} />
               </div>
               <div>
-                <span className="font-extrabold text-main block leading-tight">Proyeksi {ticker.toUpperCase()}</span>
+                <span className="font-extrabold text-main block leading-tight">
+                  Proyeksi {ticker ? ticker : 'SAHAM'}
+                </span>
                 {clientName && (
                   <span className="text-[10px] text-muted block mt-0.5">Dihitung oleh: {clientName}</span>
                 )}
@@ -262,7 +269,7 @@ export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
                 <span>SKENARIO BATAS RUGI (STOP LOSS)</span>
               </div>
               <span className="font-bold text-acc-pink text-sm">
-                {result.skenarioRugi.persentase}%
+                -{result.skenarioRugi.persentase}%
               </span>
             </div>
 

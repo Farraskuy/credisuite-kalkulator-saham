@@ -16,13 +16,19 @@ export default function AraArbSection({ fractionRules }: Props) {
 
   const result = calculateAraArb(price, board, fractionRules);
 
+  const handleTickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Validasi JS: Hapus semua karakter non-huruf dan batasi maksimal 4 karakter
+    const cleanTicker = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 4).toUpperCase();
+    setTicker(cleanTicker);
+  };
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawVal = e.target.value.replace(/\D/g, '');
     setPrice(rawVal ? parseInt(rawVal, 10) : 0);
   };
 
   const cleanFileName = ticker
-    ? `kalkulator-ara-arb-${ticker.toUpperCase()}-${price}`
+    ? `kalkulator-ara-arb-${ticker}-${price}`
     : `kalkulator-ara-arb-${price}`;
 
   return (
@@ -53,16 +59,15 @@ export default function AraArbSection({ fractionRules }: Props) {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div className="space-y-1">
                 <label htmlFor="ara-ticker" className="text-xs font-bold text-muted block">
-                  Kode Ticker Saham
+                  Kode Ticker Saham (Max 4 Huruf)
                 </label>
                 <input
                   id="ara-ticker"
                   type="text"
                   className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-bold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all uppercase placeholder-gray-400"
                   value={ticker}
-                  onChange={(e) => setTicker(e.target.value)}
+                  onChange={handleTickerChange}
                   placeholder="e.g. BBRI"
-                  required
                 />
               </div>
 
@@ -117,7 +122,9 @@ export default function AraArbSection({ fractionRules }: Props) {
                 <TrendingUp size={20} />
               </div>
               <div>
-                <span className="font-extrabold text-main block leading-tight">Batas Harga {ticker.toUpperCase()}</span>
+                <span className="font-extrabold text-main block leading-tight">
+                  Batas Harga {ticker ? ticker : 'SAHAM'}
+                </span>
                 <span className="text-[10px] text-muted block mt-0.5">Papan: {board}</span>
               </div>
             </div>

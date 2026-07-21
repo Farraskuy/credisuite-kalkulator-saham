@@ -6,6 +6,7 @@ import { calculateAverage, formatIDR, formatNumber, PurchaseRow } from '@/lib/ca
 import ExportCardWrapper from './ExportCardWrapper';
 
 export default function AvgUpDownSection() {
+  const [ticker, setTicker] = useState<string>('BBRI');
   const [rows, setRows] = useState<PurchaseRow[]>([
     { id: '1', price: 1000, lot: 10 },
     { id: '2', price: 800, lot: 15 },
@@ -15,6 +16,12 @@ export default function AvgUpDownSection() {
   const [newPrice, setNewPrice] = useState<number>(0);
 
   const result = calculateAverage(rows);
+
+  const handleTickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Validasi JS: Hapus semua karakter non-huruf dan batasi maksimal 4 karakter
+    const cleanTicker = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 4).toUpperCase();
+    setTicker(cleanTicker);
+  };
 
   const handleUpdateRow = (index: number, field: 'price' | 'lot', value: string) => {
     const rawVal = value.replace(/\D/g, '');
@@ -49,12 +56,16 @@ export default function AvgUpDownSection() {
     }
   }
 
+  const cleanFileName = ticker
+    ? `kalkulator-average-${ticker}`
+    : `kalkulator-average`;
+
   return (
     <section id="avg-up-down" className="space-y-6 scroll-mt-20">
       <div className="border-b border-border-custom pb-4">
         <div className="text-xs font-bold text-acc-purple uppercase tracking-wider">Kalkulator #2</div>
         <h2 className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5 text-main mt-1">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-purple   shadow-acc-purple/20">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-purple shadow-sm shadow-acc-purple/20">
             <Layers size={20} />
           </div>
           Simulasi Average Up / Down
@@ -62,171 +73,167 @@ export default function AvgUpDownSection() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Left Input Card */}
-        <div className="bg-card  rounded-3xl p-6 sm:p-8   flex flex-col justify-between min-h-[440px]">
+        {/* Left Form Card */}
+        <div className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[440px]">
           <div>
             <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-purple text-acc-purple">
                   <Layers size={20} />
                 </div>
-                <span className="font-bold text-main">Daftar Transaksi Pembelian</span>
+                <span className="font-bold text-main">Daftar Pembelian Saham</span>
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              {rows.map((row, idx) => (
-                <div
-                  key={row.id || idx}
-                  className="grid grid-cols-[1.2fr_1fr_auto] gap-2.5 items-end bg-sub-slate p-3 rounded-xl"
-                >
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-muted block">
-                      Harga Beli #{idx + 1}
-                    </label>
+            <div className="space-y-1 mb-6">
+              <label htmlFor="avg-ticker" className="text-xs font-bold text-muted block">
+                Kode Ticker Saham (Max 4 Huruf)
+              </label>
+              <input
+                id="avg-ticker"
+                type="text"
+                className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-bold outline-none focus:border-acc-purple focus:ring-2 focus:ring-acc-purple/10 transition-all uppercase placeholder-gray-400"
+                value={ticker}
+                onChange={handleTickerChange}
+                placeholder="e.g. BBRI"
+              />
+            </div>
+
+            <div className="space-y-3 mb-6">
+              {rows.map((row, index) => (
+                <div key={row.id} className="grid grid-cols-12 gap-3 items-center">
+                  <div className="col-span-1 text-xs font-bold text-muted text-center">#{index + 1}</div>
+                  <div className="col-span-5">
                     <input
                       type="text"
                       inputMode="numeric"
-                      className="w-full bg-card  rounded-lg px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple transition-all"
+                      className="w-full bg-page border border-border-custom rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple text-xs"
                       value={row.price ? formatNumber(row.price) : ''}
-                      onChange={(e) => handleUpdateRow(idx, 'price', e.target.value)}
-                      placeholder="e.g. 1000"
+                      onChange={(e) => handleUpdateRow(index, 'price', e.target.value)}
+                      placeholder="Harga (Rp)"
                     />
                   </div>
-
-                  <div className="space-y-1">
-                    <label className="text-[10px] font-bold text-muted block">
-                      Lot
-                    </label>
+                  <div className="col-span-5">
                     <input
                       type="text"
                       inputMode="numeric"
-                      className="w-full bg-card  rounded-lg px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple transition-all"
+                      className="w-full bg-page border border-border-custom rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple text-xs"
                       value={row.lot ? formatNumber(row.lot) : ''}
-                      onChange={(e) => handleUpdateRow(idx, 'lot', e.target.value)}
-                      placeholder="e.g. 10"
+                      onChange={(e) => handleUpdateRow(index, 'lot', e.target.value)}
+                      placeholder="Lot"
                     />
                   </div>
-
-                  {rows.length > 1 && (
-                    <button
-                      onClick={() => handleRemoveRow(idx)}
-                      className="bg-sub-pink border border-acc-pink text-acc-pink w-10 h-10 rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-acc-pink hover:text-white"
-                      title="Hapus baris"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  )}
+                  <div className="col-span-1 flex justify-center">
+                    {rows.length > 1 && (
+                      <button
+                        onClick={() => handleRemoveRow(index)}
+                        className="text-muted hover:text-acc-pink p-1 transition-colors cursor-pointer"
+                        title="Hapus Baris"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
 
             <button
               onClick={handleAddRow}
-              className="w-full bg-card  text-main font-semibold py-2.5 px-4 rounded-xl text-sm transition-all duration-200 hover:border-acc-purple hover:text-acc-purple cursor-pointer mt-4 flex items-center justify-center gap-1.5"
+              className="flex items-center justify-center gap-1.5 w-full bg-sub-purple text-acc-purple hover:bg-sub-purple/80 font-bold py-2.5 px-4 rounded-xl text-xs transition-colors cursor-pointer"
             >
               <Plus size={16} />
               <span>Tambah Baris Pembelian</span>
             </button>
+          </div>
 
-            {/* Target Average Calculator Drawer */}
-            <div className="mt-6 pt-4 border-t border-dashed border-border-custom">
-              <div className="flex items-center gap-1.5 font-bold text-sm mb-3">
-                <Calculator size={16} className="text-acc-purple" />
-                <span>Simulasi Target Price Average (Opsional)</span>
+          {/* Calculator helper for Target Average */}
+          <div className="border-t border-border-custom pt-6 mt-6">
+            <div className="flex items-center gap-2 font-bold text-xs text-muted mb-3">
+              <Calculator size={15} /> Hitung Kebutuhan Lot untuk Target Average
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] font-bold text-muted block mb-1">Target Avg Baru (Rp)</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  className="w-full bg-page border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple text-xs"
+                  value={targetAvg ? formatNumber(targetAvg) : ''}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    setTargetAvg(val ? parseInt(val, 10) : 0);
+                  }}
+                  placeholder="Target Avg"
+                />
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-muted block">
-                    Target Avg Diharapkan
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    className="w-full bg-page  rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple transition-all"
-                    value={targetAvg ? formatNumber(targetAvg) : ''}
-                    onChange={(e) =>
-                      setTargetAvg(parseInt(e.target.value.replace(/\D/g, ''), 10) || 0)
-                    }
-                    placeholder="e.g. 900"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-muted block">
-                    Harga Pembelian Baru
-                  </label>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    className="w-full bg-page  rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple transition-all"
-                    value={newPrice ? formatNumber(newPrice) : ''}
-                    onChange={(e) =>
-                      setNewPrice(parseInt(e.target.value.replace(/\D/g, ''), 10) || 0)
-                    }
-                    placeholder="e.g. 750"
-                  />
-                </div>
+              <div>
+                <label className="text-[10px] font-bold text-muted block mb-1">Harga Pembelian Baru (Rp)</label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  className="w-full bg-page border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple text-xs"
+                  value={newPrice ? formatNumber(newPrice) : ''}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '');
+                    setNewPrice(val ? parseInt(val, 10) : 0);
+                  }}
+                  placeholder="Harga Baru"
+                />
               </div>
             </div>
+
+            {neededLots > 0 && (
+              <div className="bg-sub-purple border border-acc-purple/20 rounded-2xl p-3 mt-3 text-xs">
+                <span className="font-bold text-acc-purple block mb-0.5">Kebutuhan Tambahan:</span>
+                <div className="flex justify-between text-muted text-[11px]">
+                  <span>Jumlah Lot: <strong className="text-main">{formatNumber(neededLots)} Lot</strong></span>
+                  <span>Estimasi Modal: <strong className="text-main">{formatIDR(neededCapital)}</strong></span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Right Output Card */}
-        <ExportCardWrapper fileName={`kalkulator-average-${result.avgPrice}`} calculatorType="average">
+        <ExportCardWrapper fileName={cleanFileName} calculatorType="average">
           <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-6">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-purple text-acc-purple">
                 <Layers size={20} />
               </div>
-              <span className="font-bold text-main">Ringkasan Posisi Saham</span>
+              <div>
+                <span className="font-extrabold text-main block leading-tight">
+                  Simulasi Average {ticker ? ticker : 'SAHAM'}
+                </span>
+                <span className="text-[10px] text-muted block mt-0.5">{result.rowCount} Pembelian Dikalkulasi</span>
+              </div>
             </div>
             <span className="text-xs font-bold text-acc-purple bg-sub-purple px-2.5 py-1 rounded-lg">
-              {result.rowCount} Transaksi Beli
+              {formatNumber(result.totalLot)} Lot
             </span>
           </div>
 
           <div className="bg-gradient-to-r from-acc-purple to-acc-purple/90 text-white rounded-2xl p-5 flex items-center justify-between shadow-md shadow-acc-purple/10">
             <div>
-              <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-85">Harga Rata-Rata (Average Price)</div>
-              <div className="text-xl sm:text-2xl font-extrabold mt-1">{formatIDR(result.avgPrice)}</div>
+              <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-85">Harga Rata-Rata per Lembar (Avg Price)</div>
+              <div className="text-2xl sm:text-3xl font-extrabold mt-1">{formatIDR(result.avgPrice)}</div>
             </div>
             <div>
-              <Layers size={24} />
+              <Layers size={28} />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-4 mb-4">
             <div className="bg-sub-purple text-acc-purple rounded-2xl p-4 space-y-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Total Pemilikan Lot</span>
-              <span className="text-base font-extrabold block text-main">{formatNumber(result.totalLot)} Lot</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Total Lembar Saham</span>
+              <span className="text-lg font-extrabold block text-main">{formatNumber(result.totalLembar)} Lembar</span>
             </div>
             <div className="bg-sub-purple text-acc-purple rounded-2xl p-4 space-y-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Total Lembar Saham</span>
-              <span className="text-base font-extrabold block text-main">{formatNumber(result.totalLembar)} lembar</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Total Investasi Pembelian</span>
+              <span className="text-lg font-extrabold block text-main">{formatIDR(result.totalInvestment)}</span>
             </div>
           </div>
-
-          <div className="bg-sub-slate text-sub rounded-2xl p-4 space-y-1 mb-4">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Total Modal Pembelian (Investasi)</span>
-            <span className="text-xl font-extrabold block text-main">
-              {formatIDR(result.totalInvestment)}
-            </span>
-          </div>
-
-          {neededLots > 0 && (
-            <div className="bg-sub-green border border-acc-green rounded-2xl p-4 space-y-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Rekomendasi Beli Baru Untuk Target Avg</span>
-              <div className="text-base font-extrabold text-acc-green">
-                Beli +{formatNumber(neededLots)} Lot ({formatNumber(neededLots * 100)} lembar) pada
-                harga {formatIDR(newPrice)}
-              </div>
-              <span className="text-[11px] text-muted block">
-                Tambahan modal dibutuhkan: {formatIDR(neededCapital)}
-              </span>
-            </div>
-          )}
         </ExportCardWrapper>
       </div>
     </section>
