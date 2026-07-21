@@ -1,7 +1,5 @@
 import Navbar from '@/components/Navbar';
-import AraArbSection from '@/components/AraArbSection';
-import AvgUpDownSection from '@/components/AvgUpDownSection';
-import PredictionSection from '@/components/PredictionSection';
+import CalculatorContainer from '@/components/CalculatorContainer';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
 import DynamicDisclaimer from '@/components/DynamicDisclaimer';
 import WebsiteBrand from '@/components/WebsiteBrand';
@@ -66,20 +64,18 @@ export default async function HomePage() {
           </p>
         </section>
 
-        {/* SECTION 1: ARA / ARB */}
-        <AraArbSection fractionRules={fractionRules} />
-
-        {/* SECTION 2: AVERAGE UP / DOWN */}
-        <AvgUpDownSection />
-
-        {/* SECTION 3: PREDIKSI TARGET JUAL / BELI */}
-        <PredictionSection fractionRules={fractionRules} tax={tax} />
+        {/* CALCULATOR CONTAINER (Shared Ticker State) */}
+        <CalculatorContainer fractionRules={fractionRules} tax={tax} />
       </main>
 
-      <footer className="border-t border-border-custom bg-card/50 py-8 text-center mt-auto px-4">
-        <div className="max-w-7xl mx-auto">
-          <p className="font-bold text-main mb-1.5">
+      {/* FOOTER - NO BORDER, NO SHADOW */}
+      <footer className="bg-card py-8 text-center mt-auto px-4">
+        <div className="max-w-7xl mx-auto space-y-2">
+          <p className="font-bold text-main">
             <WebsiteBrand /> • Alat Analisis Saham BEI
+          </p>
+          <p className="text-xs text-muted font-medium">
+            Contact Us: <a href="mailto:admin@hitungsaham.com" className="text-acc-blue hover:underline">admin@hitungsaham.com</a>
           </p>
           <DynamicDisclaimer />
         </div>

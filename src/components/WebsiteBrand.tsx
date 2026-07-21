@@ -7,7 +7,7 @@ interface Props {
   suffix?: string;
 }
 
-export default function WebsiteBrand({ fallback = 'KalkulatorSaham.id', suffix = '' }: Props) {
+export default function WebsiteBrand({ fallback = 'hitungsaham.com', suffix = '' }: Props) {
   const [hostname, setHostname] = useState(fallback);
 
   useEffect(() => {
