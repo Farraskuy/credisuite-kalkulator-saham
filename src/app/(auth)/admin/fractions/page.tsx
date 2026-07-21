@@ -57,7 +57,7 @@ export default function AdminFractionsPage() {
 
       <div className="bg-card rounded-3xl p-6">
         <div>
-          <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
+          <h3 className="font-extrabold text-sm tracking-tight  pb-4 mb-3 text-main">
             Tabel Fraksi Harga BEI (Tick Size)
           </h3>
           <p className="text-xs text-muted mb-6 leading-relaxed">
@@ -67,7 +67,7 @@ export default function AdminFractionsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse">
               <thead>
-                <tr className="border-b border-border-custom text-muted font-bold">
+                <tr className=" text-muted font-bold">
                   <th className="py-2.5">Harga Min (Rp)</th>
                   <th className="py-2.5">Harga Max (Rp)</th>
                   <th className="py-2.5">Tick Size (Rp)</th>

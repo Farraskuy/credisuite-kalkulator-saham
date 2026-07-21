@@ -184,13 +184,13 @@ export default function AdminDashboardPage() {
       {/* TRAFFIC & ACTION DETAILS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card rounded-3xl p-6">
-          <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
+          <h3 className="font-extrabold text-sm tracking-tight  pb-4 mb-4 text-main">
             Sumber Trafik Masuk (Referrer)
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse">
               <thead>
-                <tr className="border-b border-border-custom text-muted font-bold">
+                <tr className=" text-muted font-bold">
                   <th className="py-2.5">Sumber / Rujukan</th>
                   <th className="py-2.5 text-right">Jumlah Kunjungan</th>
                 </tr>
@@ -215,13 +215,13 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="bg-card rounded-3xl p-6">
-          <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
+          <h3 className="font-extrabold text-sm tracking-tight  pb-4 mb-4 text-main">
             Aktivitas per Kalkulator
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse">
               <thead>
-                <tr className="border-b border-border-custom text-muted font-bold">
+                <tr className=" text-muted font-bold">
                   <th className="py-2.5">Jenis Kalkulator</th>
                   <th className="py-2.5 text-center">Unduh PNG</th>
                   <th className="py-2.5 text-center">Bagikan PNG</th>
@@ -263,13 +263,13 @@ export default function AdminDashboardPage() {
 
       {/* Log Aktivitas Terbaru */}
       <div className="bg-card rounded-3xl p-6">
-        <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
+        <h3 className="font-extrabold text-sm tracking-tight  pb-4 mb-4 text-main">
           Log Aktivitas Pengguna Terbaru (Download / Share)
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-xs text-left border-collapse">
             <thead>
-              <tr className="border-b border-border-custom text-muted font-bold">
+              <tr className=" text-muted font-bold">
                 <th className="py-2.5">Waktu</th>
                 <th className="py-2.5">Kalkulator</th>
                 <th className="py-2.5 text-right">Aksi</th>

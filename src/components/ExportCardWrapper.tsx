@@ -113,7 +113,7 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="flex-grow flex items-center justify-center gap-2 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-3 px-6 rounded-2xl text-sm transition-all duration-200 shadow-md shadow-acc-blue/15 cursor-pointer disabled:opacity-50"
+          className="grow flex items-center justify-center gap-2 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-3 px-6 rounded-2xl text-sm transition-all duration-200 shadow-md shadow-acc-blue/15 cursor-pointer disabled:opacity-50"
         >
           <Download size={17} />
           <span>{downloading ? 'Membuat PNG...' : 'Unduh Gambar PNG'}</span>

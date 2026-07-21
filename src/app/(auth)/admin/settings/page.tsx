@@ -59,7 +59,7 @@ export default function AdminSettingsPage() {
 
       <div className="bg-card rounded-3xl p-6 max-w-3xl">
         <div>
-          <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
+          <h3 className="font-extrabold text-sm tracking-tight  pb-4 mb-3 text-main">
             Pengaturan Sistem & Disclaimer
           </h3>
           <p className="text-xs text-muted mb-6 leading-relaxed">

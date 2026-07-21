@@ -105,7 +105,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* SIDEBAR FOR DESKTOP */}
       <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 shrink-0 bg-card border-r border-border-custom transition-colors duration-300">
         {/* Brand Logo */}
-        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-border-custom shrink-0">
+        <div className="h-16 flex items-center gap-2.5 px-6  shrink-0">
           <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
             KS
           </div>
@@ -144,7 +144,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {mobileSidebarOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden bg-black/50 backdrop-blur-sm">
           <div className="w-64 bg-card h-full flex flex-col border-r border-border-custom animate-slide-in">
-            <div className="h-16 flex items-center justify-between px-6 border-b border-border-custom shrink-0">
+            <div className="h-16 flex items-center justify-between px-6  shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
                   KS
@@ -188,7 +188,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* MAIN CONTAINER */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* TOP BAR */}
-        <header className="h-16 shrink-0 bg-card border-b border-border-custom flex items-center justify-between px-4 sm:px-6 z-10 transition-colors duration-300">
+        <header className="h-16 shrink-0 bg-card  flex items-center justify-between px-4 sm:px-6 z-10 transition-colors duration-300">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileSidebarOpen(true)}
@@ -202,14 +202,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-sub hover:text-acc-blue bg-sub-slate px-3 py-2 rounded-xl transition-all"
-            >
-              <ArrowLeft size={14} />
-              <span>Lihat Website</span>
-            </Link>
-
             <button
               onClick={toggleTheme}
               className="w-9 h-9 rounded-xl flex items-center justify-center text-main hover:text-acc-blue cursor-pointer transition-colors"
@@ -233,8 +225,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {profileDropdownOpen && (
                 <>
                   <div className="fixed inset-0 z-20" onClick={() => setProfileDropdownOpen(false)} />
-                  <div className="absolute right-0 mt-2 w-56 bg-card border border-border-custom rounded-2xl shadow-xl z-30 p-2 text-main animate-fade-in">
-                    <div className="px-3 py-2.5 border-b border-border-custom">
+                  <div className="absolute right-0 mt-2 w-56 bg-card  rounded-2xl shadow-xl z-30 p-2 text-main animate-fade-in">
+                    <div className="px-3 py-2.5 ">
                       <p className="text-[10px] font-bold text-muted uppercase tracking-wider">{getGreeting()}</p>
                       <p className="text-xs font-extrabold mt-0.5 truncate text-main">Administrator</p>
                     </div>
