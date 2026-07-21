@@ -4,6 +4,7 @@ import AvgUpDownSection from '@/components/AvgUpDownSection';
 import PredictionSection from '@/components/PredictionSection';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
 import DynamicDisclaimer from '@/components/DynamicDisclaimer';
+import WebsiteBrand from '@/components/WebsiteBrand';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -51,7 +52,7 @@ export default function HomePage() {
       <footer className="border-t border-border-custom bg-card/50 py-8 text-center mt-auto px-4">
         <div className="max-w-7xl mx-auto">
           <p className="font-bold text-main mb-1.5">
-            KalkulatorSaham.id • Alat Analisis Saham BEI
+            <WebsiteBrand /> • Alat Analisis Saham BEI
           </p>
           <DynamicDisclaimer />
         </div>

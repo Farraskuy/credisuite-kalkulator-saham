@@ -3,6 +3,7 @@
 import React, { useRef, useState } from 'react';
 import { Download, Share2, Check, TrendingUp } from 'lucide-react';
 import { toPng } from 'html-to-image';
+import WebsiteBrand from './WebsiteBrand';
 
 interface Props {
   children: React.ReactNode;
@@ -60,7 +61,7 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
         await navigator.share({
           files: [file],
           title: 'Hasil Kalkulator Saham',
-          text: 'Lihat simulasi perhitungan saham dari KalkulatorSaham.id',
+          text: 'Lihat simulasi perhitungan saham dari { window.location.hostname }',
         });
       } else {
         // Fallback to copying image or link
@@ -85,9 +86,9 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
 
         {/* Watermark in Bottom-Left */}
         <div className="flex items-center justify-between text-[11px] text-muted border-t border-border-custom pt-4 mt-6">
-          <div className="flex items-center gap-1 font-bold text-acc-blue">
-            <TrendingUp size={14} />
-            <span>KalkulatorSaham.id</span>
+          <div className="flex items-center gap-1.5 font-bold text-acc-blue">
+            <i className="fa-solid fa-chart-line text-xs"></i>
+            <WebsiteBrand />
           </div>
           <span>Simulasi Saham BEI</span>
         </div>

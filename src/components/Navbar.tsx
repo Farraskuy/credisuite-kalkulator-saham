@@ -36,10 +36,6 @@ export default function Navbar() {
           {/* Controls (Desktop) */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
-            <Link href="/login" className="bg-acc-blue hover:bg-acc-blue/90 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition-all duration-200 shadow-sm shadow-acc-blue/10">
-              <ShieldCheck size={16} />
-              <span>Admin</span>
-            </Link>
           </div>
 
           {/* Mobile Controls & Hamburger Button */}
@@ -82,16 +78,6 @@ export default function Navbar() {
               Target Jual/Beli
             </a>
           </nav>
-          <div className="pt-2 border-t border-border-custom">
-            <Link
-              href="/login"
-              onClick={() => setIsOpen(false)}
-              className="w-full bg-acc-blue hover:bg-acc-blue/90 text-white py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-1.5 transition-all"
-            >
-              <ShieldCheck size={16} />
-              <span>Admin Panel</span>
-            </Link>
-          </div>
         </div>
       )}
     </header>

@@ -38,119 +38,81 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'var(--bg-page)',
-        padding: '1.5rem',
-      }}
-    >
-      <div
-        className="flat-card"
-        style={{ width: '100%', maxWidth: '420px', padding: '2rem' }}
-      >
+    <div className="min-h-screen flex items-center justify-center bg-page px-4 sm:px-6 transition-colors duration-300">
+      <div className="w-full max-w-[420px] bg-card border border-border-custom rounded-3xl p-8 shadow-md">
         <div>
           <Link
             href="/"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              color: 'var(--text-muted)',
-              fontSize: '0.85rem',
-              fontWeight: 700,
-              textDecoration: 'none',
-              marginBottom: '1.5rem',
-            }}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-acc-blue mb-6 transition-colors"
           >
             <ArrowLeft size={16} /> Kembali ke Kalkulator
           </Link>
 
-          <div
-            style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '14px',
-              background: 'var(--accent-blue)',
-              color: '#fff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '1rem',
-            }}
-          >
+          <div className="w-12 h-12 rounded-xl bg-acc-blue text-white flex items-center justify-center shadow-md shadow-acc-blue/20 mb-4">
             <ShieldCheck size={28} />
           </div>
 
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)' }}>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-main">
             Admin Panel Login
           </h1>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+          <p className="text-xs text-muted mt-1.5 mb-6">
             Masuk untuk mengatur fraksi harga BEI dan persentase ARA/ARB.
           </p>
 
           {error && (
-            <div
-              style={{
-                background: 'var(--bg-sub-pink)',
-                border: '1px solid var(--accent-pink)',
-                color: 'var(--accent-pink)',
-                padding: '0.75rem',
-                borderRadius: '10px',
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                marginBottom: '1rem',
-              }}
-            >
+            <div className="bg-sub-pink border border-acc-pink text-acc-pink p-3.5 rounded-xl text-xs font-bold mb-4">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="form-group">
-              <label htmlFor="login-email" className="form-label">Email Admin</label>
-              <div style={{ position: 'relative' }}>
+          <form onSubmit={handleLogin} className="flex flex-col gap-4">
+            <div className="space-y-1.5">
+              <label htmlFor="login-email" className="text-[10px] font-bold text-muted uppercase tracking-wider block">
+                Email Admin
+              </label>
+              <div className="relative">
                 <input
                   id="login-email"
                   type="email"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@kalkulatorsaham.id"
+                  placeholder="admin@{ window.location.hostname }"
                   required
-                  style={{ paddingLeft: '2.5rem' }}
                 />
                 <Mail
                   size={18}
-                  style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
                 />
               </div>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="login-pass" className="form-label">Password</label>
-              <div style={{ position: 'relative' }}>
+            <div className="space-y-1.5">
+              <label htmlFor="login-pass" className="text-[10px] font-bold text-muted uppercase tracking-wider block">
+                Password
+              </label>
+              <div className="relative">
                 <input
                   id="login-pass"
                   type="password"
-                  className="form-input"
+                  className="w-full bg-page border border-border-custom rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  style={{ paddingLeft: '2.5rem' }}
                 />
                 <Lock
                   size={18}
-                  style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
                 />
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: '0.5rem' }}>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-1.5 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-3 px-6 rounded-2xl text-sm transition-all duration-200 shadow-md shadow-acc-blue/15 cursor-pointer disabled:opacity-50 mt-2"
+            >
               {loading ? 'Memproses...' : 'Masuk ke Admin CMS'}
             </button>
           </form>
