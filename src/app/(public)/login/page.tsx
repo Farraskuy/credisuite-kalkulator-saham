@@ -70,7 +70,7 @@ export default function LoginPage() {
                   className="w-full bg-page  rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={`admin@${window.location.hostname}`}
+                  placeholder="admin@credisuite.com"
                   required
                 />
                 <Mail
