@@ -57,7 +57,7 @@ export default function AdminSettingsPage() {
         </div>
       )}
 
-      <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm max-w-3xl">
+      <div className="bg-card rounded-3xl p-6 max-w-3xl">
         <div>
           <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
             Pengaturan Sistem & Disclaimer
@@ -68,7 +68,7 @@ export default function AdminSettingsPage() {
 
           <form onSubmit={handleSaveSettings} className="space-y-5">
             {/* Tax Setting Box */}
-            <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
+            <div className="bg-sub-slate p-5 rounded-2xl">
               <h4 className="font-extrabold text-xs text-main tracking-wide mb-2">
                 Pengaturan Pajak Transaksi Global
               </h4>
@@ -80,7 +80,7 @@ export default function AdminSettingsPage() {
                 <input
                   type="number"
                   step="0.01"
-                  className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
+                  className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
                   value={taxSetting}
                   onChange={(e) => setTaxSetting(parseFloat(e.target.value) || 0.0)}
                 />
@@ -91,7 +91,7 @@ export default function AdminSettingsPage() {
             <div className="space-y-1">
               <label className="text-[10px] font-bold text-muted block">Teks Syarat & Ketentuan (Disclaimer)</label>
               <textarea
-                className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue text-xs"
+                className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue text-xs"
                 rows={6}
                 value={terms}
                 onChange={(e) => setTerms(e.target.value)}

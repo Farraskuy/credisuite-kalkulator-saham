@@ -54,35 +54,6 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* TOP HEADER CONTROLS (from Gambar 3) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center bg-card border border-border-custom p-1 rounded-2xl w-fit shadow-sm">
-          <button className="bg-acc-blue text-white px-5 py-2 rounded-xl text-xs font-extrabold shadow-sm transition-all cursor-pointer">
-            Total User
-          </button>
-          <button className="text-muted hover:text-main px-5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer">
-            Daily Activity User
-          </button>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={loadAnalytics}
-            disabled={loading}
-            className="flex items-center gap-2 bg-acc-blue text-white hover:bg-acc-blue/90 font-bold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer shadow-sm disabled:opacity-50"
-          >
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-            <span>Refetch Data</span>
-          </button>
-          <div className="flex items-center gap-1.5 bg-card border border-border-custom px-3 py-2 rounded-xl text-xs text-muted shadow-sm">
-            <Clock size={14} className="text-acc-blue" />
-            <span>
-              Last Fetched At <strong className="text-main">{new Date().toLocaleTimeString('id-ID')} (just now)</strong>
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* Analytics Header Title */}
       <div>
         <div className="text-[10px] font-bold text-acc-blue uppercase tracking-widest">Analytics Overview</div>
@@ -92,7 +63,7 @@ export default function AdminDashboardPage() {
       {/* STATS CARD GRID (Matching Gambar 1 & Gambar 3 100%) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* CARD 1: USERS (TRAFFIC) */}
-        <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm space-y-4 transition-all hover:shadow-md">
+        <div className="bg-card rounded-3xl p-6 space-y-4 transition-all">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-sub-blue text-acc-blue flex items-center justify-center">
@@ -105,7 +76,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-blue-600 text-white rounded-2xl p-5 shadow-sm shadow-blue-600/20 flex items-center justify-between">
+          <div className="bg-blue-600 text-white rounded-2xl p-5 shadow-blue-600/20 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-85 block">Total Users</span>
               <span className="text-3xl font-extrabold mt-1 block">{formatNumber(analytics?.summary.totalTraffic || 0)}</span>
@@ -114,11 +85,11 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-1">
-            <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+            <div className="bg-sub-slate/60 p-3 rounded-2xl/30">
               <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Active Now</span>
               <span className="text-base font-extrabold text-main mt-0.5 block">1</span>
             </div>
-            <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+            <div className="bg-sub-slate/60 p-3 rounded-2xl/30">
               <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Daily Active</span>
               <span className="text-base font-extrabold text-main mt-0.5 block">1</span>
             </div>
@@ -132,7 +103,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* CARD 2: DOWNLOADS */}
-        <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm space-y-4 transition-all hover:shadow-md">
+        <div className="bg-card rounded-3xl p-6 space-y-4 transition-all">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center">
@@ -145,7 +116,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-purple-600 text-white rounded-2xl p-5 shadow-sm shadow-purple-600/20 flex items-center justify-between">
+          <div className="bg-purple-600 text-white rounded-2xl p-5 shadow-purple-600/20 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-85 block">Total Unduh PNG</span>
               <span className="text-3xl font-extrabold mt-1 block">{formatNumber(analytics?.summary.totalDownloads || 0)}</span>
@@ -154,11 +125,11 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-1">
-            <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+            <div className="bg-sub-slate/60 p-3 rounded-2xl/30">
               <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Aksi Unduh</span>
               <span className="text-base font-extrabold text-main mt-0.5 block">{analytics?.summary.totalDownloads || 0}</span>
             </div>
-            <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+            <div className="bg-sub-slate/60 p-3 rounded-2xl/30">
               <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Kalkulator Aktif</span>
               <span className="text-base font-extrabold text-main mt-0.5 block">3</span>
             </div>
@@ -171,7 +142,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* CARD 3: SHARES */}
-        <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm space-y-4 transition-all hover:shadow-md">
+        <div className="bg-card rounded-3xl p-6 space-y-4 transition-all">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
@@ -184,7 +155,7 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
-          <div className="bg-emerald-600 text-white rounded-2xl p-5 shadow-sm shadow-emerald-600/20 flex items-center justify-between">
+          <div className="bg-emerald-600 text-white rounded-2xl p-5 shadow-emerald-600/20 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-85 block">Total Bagikan PNG</span>
               <span className="text-3xl font-extrabold mt-1 block">{formatNumber(analytics?.summary.totalShares || 0)}</span>
@@ -193,11 +164,11 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-1">
-            <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+            <div className="bg-sub-slate/60 p-3 rounded-2xl/30">
               <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Aksi Bagikan</span>
               <span className="text-base font-extrabold text-main mt-0.5 block">{analytics?.summary.totalShares || 0}</span>
             </div>
-            <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+            <div className="bg-sub-slate/60 p-3 rounded-2xl/30">
               <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Status Revenue</span>
               <span className="text-base font-extrabold text-emerald-600 mt-0.5 block">Rp 0</span>
             </div>
@@ -212,7 +183,7 @@ export default function AdminDashboardPage() {
 
       {/* TRAFFIC & ACTION DETAILS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm">
+        <div className="bg-card rounded-3xl p-6">
           <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
             Sumber Trafik Masuk (Referrer)
           </h3>
@@ -243,7 +214,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm">
+        <div className="bg-card rounded-3xl p-6">
           <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
             Aktivitas per Kalkulator
           </h3>
@@ -291,7 +262,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Log Aktivitas Terbaru */}
-      <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm">
+      <div className="bg-card rounded-3xl p-6">
         <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-4 text-main">
           Log Aktivitas Pengguna Terbaru (Download / Share)
         </h3>

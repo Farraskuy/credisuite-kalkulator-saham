@@ -95,11 +95,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const activeNav = navItems.find((item) => item.href === pathname) || navItems[0];
 
   return (
-    <div className="min-h-screen flex bg-page text-main transition-colors duration-300">
+    <div className="h-screen flex overflow-hidden bg-page text-main transition-colors duration-300">
       {/* SIDEBAR FOR DESKTOP */}
-      <aside className="hidden md:flex flex-col w-64 bg-card border-r border-border-custom transition-colors duration-300">
+      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 flex-shrink-0 bg-card border-r border-border-custom transition-colors duration-300">
         {/* Brand Logo */}
-        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-border-custom">
+        <div className="h-16 flex items-center gap-2.5 px-6 border-b border-border-custom flex-shrink-0">
           <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
             KS
           </div>
@@ -107,12 +107,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Master Menu Label */}
-        <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase">
+        <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase flex-shrink-0">
           Master Menu
         </div>
 
         {/* Sidebar Nav Links */}
-        <nav className="flex-1 px-4 space-y-1.5">
+        <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -134,7 +134,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Sidebar Footer / Logout */}
-        <div className="p-4 border-t border-border-custom">
+        <div className="p-4 border-t border-border-custom flex-shrink-0">
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-acc-pink hover:bg-sub-pink transition-all duration-200 cursor-pointer"
@@ -149,7 +149,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {mobileSidebarOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden bg-black/50 backdrop-blur-sm">
           <div className="w-64 bg-card h-full flex flex-col border-r border-border-custom animate-slide-in">
-            <div className="h-16 flex items-center justify-between px-6 border-b border-border-custom">
+            <div className="h-16 flex items-center justify-between px-6 border-b border-border-custom flex-shrink-0">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
                   KS
@@ -161,11 +161,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </button>
             </div>
 
-            <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase">
+            <div className="px-6 pt-6 pb-2 text-[10px] font-extrabold text-muted tracking-widest uppercase flex-shrink-0">
               Master Menu
             </div>
 
-            <nav className="flex-grow px-4 space-y-1.5">
+            <nav className="flex-grow px-4 space-y-1.5 overflow-y-auto">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -187,7 +187,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               })}
             </nav>
 
-            <div className="p-4 border-t border-border-custom">
+            <div className="p-4 border-t border-border-custom flex-shrink-0">
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-acc-pink hover:bg-sub-pink transition-all duration-200 cursor-pointer"
@@ -201,9 +201,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {/* MAIN CONTAINER */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* TOP BAR */}
-        <header className="h-16 bg-card border-b border-border-custom flex items-center justify-between px-4 sm:px-6 z-10 transition-colors duration-300">
+        <header className="h-16 flex-shrink-0 bg-card border-b border-border-custom flex items-center justify-between px-4 sm:px-6 z-10 transition-colors duration-300">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileSidebarOpen(true)}
@@ -270,8 +270,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        {/* MAIN PAGE CONTENT */}
-        <main className="flex-grow p-4 sm:p-6 overflow-y-auto max-w-7xl w-full mx-auto space-y-6">
+        {/* MAIN PAGE CONTENT (Independent Vertical Scroll) */}
+        <main className="flex-1 p-4 sm:p-6 overflow-y-auto max-w-7xl w-full mx-auto space-y-6">
           {children}
         </main>
       </div>

@@ -55,7 +55,7 @@ export default function AdminFractionsPage() {
         </div>
       )}
 
-      <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm">
+      <div className="bg-card rounded-3xl p-6">
         <div>
           <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
             Tabel Fraksi Harga BEI (Tick Size)
@@ -80,7 +80,7 @@ export default function AdminFractionsPage() {
                     <td className="py-2.5">
                       <input
                         type="number"
-                        className="bg-page border border-border-custom rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
+                        className="bg-page rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
                         value={f.minPrice}
                         onChange={(e) => {
                           const newFractions = [...fractions];
@@ -92,7 +92,7 @@ export default function AdminFractionsPage() {
                     <td className="py-2.5">
                       <input
                         type="text"
-                        className="bg-page border border-border-custom rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
+                        className="bg-page rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
                         value={f.maxPrice === Infinity ? 'Infinity' : f.maxPrice}
                         onChange={(e) => {
                           const newFractions = [...fractions];
@@ -105,7 +105,7 @@ export default function AdminFractionsPage() {
                     <td className="py-2.5">
                       <input
                         type="number"
-                        className="bg-page border border-border-custom rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
+                        className="bg-page rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
                         value={f.tick}
                         onChange={(e) => {
                           const newFractions = [...fractions];
@@ -131,7 +131,7 @@ export default function AdminFractionsPage() {
           <div className="flex flex-wrap gap-3 mt-6 border-t border-border-custom pt-5">
             <button
               onClick={() => setFractions([...fractions, { minPrice: 0, maxPrice: 0, tick: 1 }])}
-              className="flex items-center gap-1.5 bg-card hover:border-acc-blue hover:text-acc-blue text-main font-bold py-2 px-4 rounded-xl text-xs transition-colors cursor-pointer border border-border-custom"
+              className="flex items-center gap-1.5 bg-card hover:border-acc-blue hover:text-acc-blue text-main font-bold py-2 px-4 rounded-xl text-xs transition-colors cursor-pointer"
             >
               <Plus size={14} /> <span>Tambah Baris Fraksi</span>
             </button>

@@ -58,7 +58,7 @@ export default function AdminSecurityPage() {
         </div>
       )}
 
-      <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm max-w-md">
+      <div className="bg-card rounded-3xl p-6 max-w-md">
         <div>
           <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
             Perbarui Keamanan Password
@@ -72,7 +72,7 @@ export default function AdminSecurityPage() {
               <label className="text-[10px] font-bold text-muted block">Password Lama</label>
               <input
                 type="password"
-                className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
+                className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
                 required
@@ -83,7 +83,7 @@ export default function AdminSecurityPage() {
               <label className="text-[10px] font-bold text-muted block">Password Baru</label>
               <input
                 type="password"
-                className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
+                className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
@@ -95,7 +95,7 @@ export default function AdminSecurityPage() {
               <label className="text-[10px] font-bold text-muted block">Konfirmasi Password Baru</label>
               <input
                 type="password"
-                className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
+                className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required

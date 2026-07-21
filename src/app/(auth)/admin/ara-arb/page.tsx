@@ -71,7 +71,7 @@ export default function AdminAraArbPage() {
         </div>
       )}
 
-      <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm">
+      <div className="bg-card rounded-3xl p-6">
         <div>
           <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
             Persentase Batas Auto Rejection
@@ -81,7 +81,7 @@ export default function AdminAraArbPage() {
           </p>
 
           <div className="flex flex-col gap-4 max-w-xl">
-            <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
+            <div className="bg-sub-slate p-5 rounded-2xl">
               <h4 className="font-extrabold text-xs text-main tracking-wide mb-3">
                 Papan Utama & Papan Pengembangan
               </h4>
@@ -90,7 +90,7 @@ export default function AdminAraArbPage() {
                   <label className="text-[10px] font-bold text-muted block">ARA (%)</label>
                   <input
                     type="number"
-                    className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
+                    className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
                     value={araUtama}
                     onChange={(e) => setAraUtama(parseFloat(e.target.value) || 0)}
                   />
@@ -99,7 +99,7 @@ export default function AdminAraArbPage() {
                   <label className="text-[10px] font-bold text-muted block">ARB (%)</label>
                   <input
                     type="number"
-                    className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
+                    className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
                     value={arbUtama}
                     onChange={(e) => setArbUtama(parseFloat(e.target.value) || 0)}
                   />
@@ -107,7 +107,7 @@ export default function AdminAraArbPage() {
               </div>
             </div>
 
-            <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
+            <div className="bg-sub-slate p-5 rounded-2xl/50">
               <h4 className="font-extrabold text-xs text-main tracking-wide mb-3">
                 Papan Akselerasi & Papan Watchlist (FTS)
               </h4>
@@ -116,7 +116,7 @@ export default function AdminAraArbPage() {
                   <label className="text-[10px] font-bold text-muted block">ARA (%)</label>
                   <input
                     type="number"
-                    className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
+                    className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
                     value={araAkselerasi}
                     onChange={(e) => setAraAkselerasi(parseFloat(e.target.value) || 0)}
                   />
@@ -125,7 +125,7 @@ export default function AdminAraArbPage() {
                   <label className="text-[10px] font-bold text-muted block">ARB (%)</label>
                   <input
                     type="number"
-                    className="w-full bg-card border border-border-custom rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
+                    className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue"
                     value={arbAkselerasi}
                     onChange={(e) => setArbAkselerasi(parseFloat(e.target.value) || 0)}
                   />
