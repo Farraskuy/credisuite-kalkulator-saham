@@ -41,13 +41,6 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-page px-4 sm:px-6 transition-colors duration-300">
       <div className="w-full max-w-[420px] bg-card  rounded-3xl p-8 shadow-md">
         <div>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-muted hover:text-acc-blue mb-6 transition-colors"
-          >
-            <ArrowLeft size={16} /> Kembali ke Kalkulator
-          </Link>
-
           <div className="w-12 h-12 rounded-xl bg-acc-blue text-white flex items-center justify-center shadow-md shadow-acc-blue/20 mb-4">
             <ShieldCheck size={28} />
           </div>
@@ -77,7 +70,7 @@ export default function LoginPage() {
                   className="w-full bg-page  rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@{ window.location.hostname }"
+                  placeholder={`admin@${window.location.hostname}`}
                   required
                 />
                 <Mail

@@ -273,7 +273,7 @@ export default function AdminDashboardPage() {
       <aside className="hidden md:flex flex-col w-64 bg-card border-r border-border-custom transition-colors duration-300">
         {/* Brand Logo */}
         <div className="h-16 flex items-center gap-2.5 px-6 border-b border-border-custom">
-          <div className="w-8 h-8 rounded-lg bg-amber-500 text-black flex items-center justify-center font-bold">
+          <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
             KS
           </div>
           <span className="font-extrabold text-sm tracking-wider uppercase">Kalkulator Saham</span>
@@ -298,7 +298,7 @@ export default function AdminDashboardPage() {
                 }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? 'bg-amber-500 text-black shadow-md shadow-amber-500/10'
+                    ? 'bg-acc-blue text-white shadow-md shadow-acc-blue/20'
                     : 'text-sub hover:bg-sub-slate hover:text-main'
                 }`}
               >
@@ -327,7 +327,7 @@ export default function AdminDashboardPage() {
           <div className="w-64 bg-card h-full flex flex-col border-r border-border-custom animate-slide-in">
             <div className="h-16 flex items-center justify-between px-6 border-b border-border-custom">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-amber-500 text-black flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-lg bg-acc-blue text-white flex items-center justify-center font-bold">
                   KS
                 </div>
                 <span className="font-extrabold text-sm tracking-wider uppercase">Kalkulator Saham</span>
@@ -355,7 +355,7 @@ export default function AdminDashboardPage() {
                     }}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? 'bg-amber-500 text-black shadow-md'
+                        ? 'bg-acc-blue text-white shadow-md'
                         : 'text-sub hover:bg-sub-slate'
                     }`}
                   >
@@ -421,7 +421,7 @@ export default function AdminDashboardPage() {
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 className="flex items-center gap-2 bg-sub-slate/50 hover:bg-sub-slate  px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-main"
               >
-                <div className="w-5 h-5 rounded-full bg-amber-500 text-black flex items-center justify-center font-bold text-[10px]">
+                <div className="w-5 h-5 rounded-full bg-acc-blue text-white flex items-center justify-center font-bold text-[10px]">
                   A
                 </div>
                 <span className="hidden sm:inline">admin@credisuite.com</span>
@@ -698,7 +698,7 @@ export default function AdminDashboardPage() {
                           <td className="py-2.5">
                             <input
                               type="number"
-                              className="bg-page  rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-amber-500 w-32"
+                              className="bg-page rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
                               value={f.minPrice}
                               onChange={(e) => {
                                 const newFractions = [...fractions];
@@ -710,7 +710,7 @@ export default function AdminDashboardPage() {
                           <td className="py-2.5">
                             <input
                               type="text"
-                              className="bg-page  rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-amber-500 w-32"
+                              className="bg-page rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
                               value={f.maxPrice === Infinity ? 'Infinity' : f.maxPrice}
                               onChange={(e) => {
                                 const newFractions = [...fractions];
@@ -723,7 +723,7 @@ export default function AdminDashboardPage() {
                           <td className="py-2.5">
                             <input
                               type="number"
-                              className="bg-page  rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-amber-500 w-32"
+                              className="bg-page rounded-lg px-3 py-1.5 text-main font-semibold outline-none focus:border-acc-blue w-32"
                               value={f.tick}
                               onChange={(e) => {
                                 const newFractions = [...fractions];
@@ -749,7 +749,7 @@ export default function AdminDashboardPage() {
                 <div className="flex flex-wrap gap-3 mt-6 border-t border-border-custom pt-5">
                   <button
                     onClick={() => setFractions([...fractions, { minPrice: 0, maxPrice: 0, tick: 1 }])}
-                    className="flex items-center gap-1.5 bg-card  hover:border-amber-500 hover:text-amber-500 text-main font-bold py-2 px-4 rounded-xl text-xs transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 bg-card hover:border-acc-blue hover:text-acc-blue text-main font-bold py-2 px-4 rounded-xl text-xs transition-colors cursor-pointer border border-border-custom"
                   >
                     <Plus size={14} /> <span>Tambah Baris Fraksi</span>
                   </button>
@@ -757,7 +757,7 @@ export default function AdminDashboardPage() {
                   <button
                     onClick={handleSaveRules}
                     disabled={saving}
-                    className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50"
+                    className="flex items-center gap-1.5 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-2 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50"
                   >
                     <Save size={14} />
                     <span>{saving ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
@@ -769,7 +769,7 @@ export default function AdminDashboardPage() {
 
           {/* TAB 3: ARA / ARB */}
           {activeTab === 'ara-arb' && (
-            <div className="bg-card  rounded-3xl p-6   transition-colors duration-300">
+            <div className="bg-card rounded-3xl p-6 transition-colors duration-300">
               <div>
                 <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
                   Persentase Batas Auto Rejection
@@ -779,7 +779,7 @@ export default function AdminDashboardPage() {
                 </p>
 
                 <div className="flex flex-col gap-4 max-w-xl">
-                  <div className="bg-sub-slate p-5 rounded-2xl /50">
+                  <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
                     <h4 className="font-extrabold text-xs text-main tracking-wide mb-3">
                       Papan Utama & Papan Pengembangan
                     </h4>
@@ -788,7 +788,7 @@ export default function AdminDashboardPage() {
                         <label className="text-[10px] font-bold text-muted block">ARA (%)</label>
                         <input
                           type="number"
-                          className="w-full bg-card  rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
+                          className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue border border-border-custom"
                           value={araUtama}
                           onChange={(e) => setAraUtama(parseFloat(e.target.value) || 0)}
                         />
@@ -797,7 +797,7 @@ export default function AdminDashboardPage() {
                         <label className="text-[10px] font-bold text-muted block">ARB (%)</label>
                         <input
                           type="number"
-                          className="w-full bg-card  rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
+                          className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue border border-border-custom"
                           value={arbUtama}
                           onChange={(e) => setArbUtama(parseFloat(e.target.value) || 0)}
                         />
@@ -805,7 +805,7 @@ export default function AdminDashboardPage() {
                     </div>
                   </div>
 
-                  <div className="bg-sub-slate p-5 rounded-2xl /50">
+                  <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
                     <h4 className="font-extrabold text-xs text-main tracking-wide mb-3">
                       Papan Akselerasi & Papan Watchlist (FTS)
                     </h4>
@@ -814,7 +814,7 @@ export default function AdminDashboardPage() {
                         <label className="text-[10px] font-bold text-muted block">ARA (%)</label>
                         <input
                           type="number"
-                          className="w-full bg-card  rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
+                          className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue border border-border-custom"
                           value={araAkselerasi}
                           onChange={(e) => setAraAkselerasi(parseFloat(e.target.value) || 0)}
                         />
@@ -823,7 +823,7 @@ export default function AdminDashboardPage() {
                         <label className="text-[10px] font-bold text-muted block">ARB (%)</label>
                         <input
                           type="number"
-                          className="w-full bg-card  rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
+                          className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue border border-border-custom"
                           value={arbAkselerasi}
                           onChange={(e) => setArbAkselerasi(parseFloat(e.target.value) || 0)}
                         />
@@ -834,7 +834,7 @@ export default function AdminDashboardPage() {
                   <button
                     onClick={handleSaveRules}
                     disabled={saving}
-                    className="flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50 mt-2"
+                    className="flex items-center justify-center gap-1.5 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50 mt-2"
                   >
                     <Save size={15} />
                     <span>{saving ? 'Menyimpan...' : 'Simpan Persentase ARA/ARB'}</span>
@@ -857,7 +857,7 @@ export default function AdminDashboardPage() {
 
                 <form onSubmit={handleSaveTerms} className="space-y-5">
                   {/* Tax Setting Box */}
-                  <div className="bg-sub-slate p-5 rounded-2xl /50">
+                  <div className="bg-sub-slate p-5 rounded-2xl border border-border-custom/50">
                     <h4 className="font-extrabold text-xs text-main tracking-wide mb-2">
                       Pengaturan Pajak Transaksi Global
                     </h4>
@@ -869,7 +869,7 @@ export default function AdminDashboardPage() {
                       <input
                         type="number"
                         step="0.01"
-                        className="w-full bg-card  rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-amber-500"
+                        className="w-full bg-card rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-blue border border-border-custom"
                         value={taxSetting}
                         onChange={(e) => setTaxSetting(parseFloat(e.target.value) || 0.0)}
                       />
@@ -880,7 +880,7 @@ export default function AdminDashboardPage() {
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-muted block">Teks Syarat & Ketentuan (Disclaimer)</label>
                     <textarea
-                      className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500 text-xs"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue text-xs"
                       rows={6}
                       value={terms}
                       onChange={(e) => setTerms(e.target.value)}
@@ -892,7 +892,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50"
+                    className="flex items-center justify-center gap-1.5 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50"
                   >
                     <Save size={15} />
                     <span>{saving ? 'Menyimpan...' : 'Simpan Pengaturan Sistem'}</span>
@@ -904,7 +904,7 @@ export default function AdminDashboardPage() {
 
           {/* TAB 4: SECURITY */}
           {activeTab === 'security' && (
-            <div className="bg-card  rounded-3xl p-6   transition-colors duration-300 max-w-md">
+            <div className="bg-card rounded-3xl p-6 transition-colors duration-300 max-w-md">
               <div>
                 <h3 className="font-extrabold text-sm tracking-tight border-b border-border-custom pb-4 mb-3 text-main">
                   Perbarui Keamanan Password
@@ -918,7 +918,7 @@ export default function AdminDashboardPage() {
                     <label className="text-[10px] font-bold text-muted block">Password Lama</label>
                     <input
                       type="password"
-                      className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
                       required
@@ -929,7 +929,7 @@ export default function AdminDashboardPage() {
                     <label className="text-[10px] font-bold text-muted block">Password Baru</label>
                     <input
                       type="password"
-                      className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
@@ -941,7 +941,7 @@ export default function AdminDashboardPage() {
                     <label className="text-[10px] font-bold text-muted block">Konfirmasi Password Baru</label>
                     <input
                       type="password"
-                      className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-amber-500"
+                      className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
@@ -951,7 +951,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-black font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50 mt-2"
+                    className="flex items-center justify-center gap-1.5 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-2.5 px-5 rounded-xl text-xs transition-colors cursor-pointer disabled:opacity-50 mt-2"
                   >
                     <Save size={15} />
                     <span>{saving ? 'Memperbarui...' : 'Perbarui Password Admin'}</span>
