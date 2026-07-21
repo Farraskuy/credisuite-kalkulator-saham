@@ -83,27 +83,40 @@ export function calculateAraArb(
   fractionRules: FractionRule[] = DEFAULT_FRACTION_RULES
 ) {
   if (previousPrice <= 0) {
-    return { ara: 0, arb: 0, araPercent: 0, arbPercent: 0, araRaw: 0, arbRaw: 0 };
+    return { 
+      ara: 0, 
+      arb: 0, 
+      araPercent: 0, 
+      arbPercent: 0, 
+      araRaw: 0, 
+      arbRaw: 0,
+      araPercentMax: 0,
+      arbPercentMax: 0
+    };
   }
 
-  const { araPercent, arbPercent } = getAraArbPercentages(previousPrice, board);
+  const { araPercent: araPercentMax, arbPercent: arbPercentMax } = getAraArbPercentages(previousPrice, board);
 
-  const araRaw = previousPrice * (1 + araPercent / 100);
-  const arbRaw = previousPrice * (1 - arbPercent / 100);
+  const araRaw = previousPrice * (1 + araPercentMax / 100);
+  const arbRaw = previousPrice * (1 - arbPercentMax / 100);
 
-  // Per aturan BEI:
   // ARA dibulatkan ke bawah (floor) ke tick terdekat
   // ARB dibulatkan ke atas (ceil) ke tick terdekat
   const ara = bulatkanHargaBEI(araRaw, 'floor', fractionRules);
   const arb = bulatkanHargaBEI(arbRaw, 'ceil', fractionRules);
 
+  const araPercentActual = ((ara - previousPrice) / previousPrice) * 100;
+  const arbPercentActual = ((previousPrice - arb) / previousPrice) * 100;
+
   return {
     ara,
     arb,
-    araPercent,
-    arbPercent,
+    araPercent: araPercentActual,
+    arbPercent: arbPercentActual,
     araRaw,
     arbRaw,
+    araPercentMax,
+    arbPercentMax,
   };
 }
 
