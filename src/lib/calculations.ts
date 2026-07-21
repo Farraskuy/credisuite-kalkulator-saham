@@ -148,11 +148,10 @@ export function kalkulasiTargetSaham(
   const pctFeeBeli = feeBeli / 100;
   const pctFeeJual = feeJual / 100;
   const pctPajak = pajak / 100;
-  const pajakJualDefault = 0.001;
 
   const totalLembar = lot * 100;
   const totalModal = hargaBeli * totalLembar * (1 + pctFeeBeli + pctPajak);
-  const pengaliJual = totalLembar * (1 - pctFeeJual - pajakJualDefault - pctPajak);
+  const pengaliJual = totalLembar * (1 - pctFeeJual - pctPajak);
 
   if (pengaliJual <= 0 || totalLembar <= 0) {
     return {
@@ -165,14 +164,14 @@ export function kalkulasiTargetSaham(
   // --- SKENARIO UNTUNG ---
   const hargaUntungExact = (totalModal + targetUntungRp) / pengaliJual;
   const hargaUntungBEI = bulatkanHargaBEI(hargaUntungExact, 'ceil', fractionRules);
-  const nilaiBersihUntung = hargaUntungBEI * pengaliJual;
-  const persentaseUntung = ((nilaiBersihUntung - totalModal) / totalModal) * 100;
+  const pctProfitMax = ((hargaUntungBEI - hargaBeli) / hargaBeli) * 100;
+  const labaBersihReal = hargaUntungBEI * pengaliJual * (pctProfitMax / 100);
 
   // --- SKENARIO RUGI ---
   const hargaRugiExact = (totalModal - targetRugiRp) / pengaliJual;
   const hargaRugiBEI = bulatkanHargaBEI(hargaRugiExact, 'floor', fractionRules);
-  const nilaiBersihRugi = hargaRugiBEI * pengaliJual;
-  const persentaseRugi = ((nilaiBersihRugi - totalModal) / totalModal) * 100;
+  const pctLossMax = ((hargaBeli - hargaRugiBEI) / hargaBeli) * 100;
+  const rugiBersihReal = hargaRugiBEI * pengaliJual * (pctLossMax / 100);
 
   return {
     rincian: {
@@ -182,17 +181,16 @@ export function kalkulasiTargetSaham(
     skenarioUntung: {
       hargaExact: hargaUntungExact,
       hargaBEI: hargaUntungBEI,
-      persentase: persentaseUntung.toFixed(2),
-      labaBersihReal: nilaiBersihUntung - totalModal,
+      persentase: pctProfitMax.toFixed(2),
+      labaBersihReal: labaBersihReal,
     },
     skenarioRugi: {
       hargaExact: hargaRugiExact,
       hargaBEI: hargaRugiBEI,
-      persentase: persentaseRugi.toFixed(2),
-      rugiBersihReal: totalModal - nilaiBersihRugi,
+      persentase: pctLossMax.toFixed(2),
+      rugiBersihReal: rugiBersihReal,
     },
-  };
-}
+  };}
 
 export function formatIDR(value: number): string {
   return new Intl.NumberFormat('id-ID', {
