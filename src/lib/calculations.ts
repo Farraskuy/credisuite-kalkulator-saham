@@ -129,7 +129,6 @@ export function calculateAverage(rows: PurchaseRow[]) {
     rowCount: valid.length,
   };
 }
-
 export interface TargetPredictionInput {
   hargaBeli: number;
   lot: number;
@@ -137,21 +136,23 @@ export interface TargetPredictionInput {
   feeJual: number; // in percent e.g. 0.25
   targetUntungRp: number;
   targetRugiRp: number;
+  pajak?: number;
 }
 
 export function kalkulasiTargetSaham(
   input: TargetPredictionInput,
   fractionRules: FractionRule[] = DEFAULT_FRACTION_RULES
 ) {
-  const { hargaBeli, lot, feeBeli, feeJual, targetUntungRp, targetRugiRp } = input;
+  const { hargaBeli, lot, feeBeli, feeJual, targetUntungRp, targetRugiRp, pajak = 0 } = input;
 
   const pctFeeBeli = feeBeli / 100;
   const pctFeeJual = feeJual / 100;
-  const pajakJual = 0.001; // 0.1% pajak final penjualan BEI
+  const pctPajak = pajak / 100;
+  const pajakJualDefault = 0.001;
 
   const totalLembar = lot * 100;
-  const totalModal = hargaBeli * totalLembar * (1 + pctFeeBeli);
-  const pengaliJual = totalLembar * (1 - pctFeeJual - pajakJual);
+  const totalModal = hargaBeli * totalLembar * (1 + pctFeeBeli + pctPajak);
+  const pengaliJual = totalLembar * (1 - pctFeeJual - pajakJualDefault - pctPajak);
 
   if (pengaliJual <= 0 || totalLembar <= 0) {
     return {

@@ -5,19 +5,27 @@ import { verifySession } from '@/lib/auth';
 export async function GET() {
   try {
     let terms = 'Website ini hanya merupakan alat bantu kalkulasi saham semata berdasarkan parameter input pengguna dan aturan fraksi BEI secara matematis, serta bukan merupakan rekomendasi, saran, atau tolak ukur baku untuk transaksi jual beli saham. Keputusan investasi sepenuhnya ada di tangan pengguna.';
+    let tax = '0.0';
 
     try {
-      const setting = await prisma.systemSetting.findUnique({
+      const settingTerms = await prisma.systemSetting.findUnique({
         where: { key: 'terms' },
       });
-      if (setting) {
-        terms = setting.value;
+      if (settingTerms) {
+        terms = settingTerms.value;
+      }
+
+      const settingTax = await prisma.systemSetting.findUnique({
+        where: { key: 'tax' },
+      });
+      if (settingTax) {
+        tax = settingTax.value;
       }
     } catch {
       // Fallback to default
     }
 
-    return NextResponse.json({ terms });
+    return NextResponse.json({ terms, tax });
   } catch (error) {
     return NextResponse.json(
       { error: 'Gagal mengambil pengaturan: ' + (error as Error).message },
@@ -33,20 +41,26 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { terms } = await request.json();
-
-    if (terms === undefined || terms === null) {
-      return NextResponse.json({ error: 'Data Syarat dan Ketentuan harus diisi.' }, { status: 400 });
-    }
+    const { terms, tax } = await request.json();
 
     try {
-      await prisma.systemSetting.upsert({
-        where: { key: 'terms' },
-        update: { value: terms },
-        create: { key: 'terms', value: terms },
-      });
-    } catch {
-      // Ignore DB errors safely
+      if (terms !== undefined && terms !== null) {
+        await prisma.systemSetting.upsert({
+          where: { key: 'terms' },
+          update: { value: terms },
+          create: { key: 'terms', value: terms },
+        });
+      }
+
+      if (tax !== undefined && tax !== null) {
+        await prisma.systemSetting.upsert({
+          where: { key: 'tax' },
+          update: { value: String(tax) },
+          create: { key: 'tax', value: String(tax) },
+        });
+      }
+    } catch (dbErr) {
+      console.error('Database write error:', dbErr);
     }
 
     return NextResponse.json({ success: true });

@@ -25,7 +25,7 @@ export default function AraArbSection({ fractionRules }: Props) {
       <div className="border-b border-border-custom pb-4">
         <div className="text-xs font-bold text-acc-blue uppercase tracking-wider">Kalkulator #1</div>
         <h2 className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5 text-main mt-1">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-blue shadow-sm shadow-acc-blue/20">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-blue   shadow-acc-blue/20">
             <ShieldAlert size={20} />
           </div>
           Batas Auto Rejection (ARA / ARB)
@@ -34,7 +34,7 @@ export default function AraArbSection({ fractionRules }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* Left Form Input Card */}
-        <div className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[440px]">
+        <div className="bg-card  rounded-3xl p-6 sm:p-8   flex flex-col justify-between min-h-[440px]">
           <div>
             <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-6">
               <div className="flex items-center gap-3">
@@ -53,7 +53,7 @@ export default function AraArbSection({ fractionRules }: Props) {
                 id="ara-price"
                 type="text"
                 inputMode="numeric"
-                className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
+                className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
                 value={price ? new Intl.NumberFormat('id-ID').format(price) : ''}
                 onChange={handlePriceChange}
                 placeholder="Masukkan harga e.g. 1500"
@@ -66,7 +66,7 @@ export default function AraArbSection({ fractionRules }: Props) {
               </label>
               <select
                 id="ara-board"
-                className="w-full bg-page border border-border-custom rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all cursor-pointer"
+                className="w-full bg-page  rounded-xl px-4 py-3 text-main font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all cursor-pointer"
                 value={board}
                 onChange={(e) => setBoard(e.target.value as Board)}
               >

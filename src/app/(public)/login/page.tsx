@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-page px-4 sm:px-6 transition-colors duration-300">
-      <div className="w-full max-w-[420px] bg-card border border-border-custom rounded-3xl p-8 shadow-md">
+      <div className="w-full max-w-[420px] bg-card  rounded-3xl p-8 shadow-md">
         <div>
           <Link
             href="/"
@@ -74,7 +74,7 @@ export default function LoginPage() {
                 <input
                   id="login-email"
                   type="email"
-                  className="w-full bg-page border border-border-custom rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
+                  className="w-full bg-page  rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@{ window.location.hostname }"
@@ -95,7 +95,7 @@ export default function LoginPage() {
                 <input
                   id="login-pass"
                   type="password"
-                  className="w-full bg-page border border-border-custom rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
+                  className="w-full bg-page  rounded-xl pl-10 pr-4 py-3 text-main text-sm font-semibold outline-none focus:border-acc-blue focus:ring-2 focus:ring-acc-blue/10 transition-all"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"

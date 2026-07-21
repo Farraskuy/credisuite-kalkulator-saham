@@ -54,7 +54,7 @@ export default function AvgUpDownSection() {
       <div className="border-b border-border-custom pb-4">
         <div className="text-xs font-bold text-acc-purple uppercase tracking-wider">Kalkulator #2</div>
         <h2 className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5 text-main mt-1">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-purple shadow-sm shadow-acc-purple/20">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-purple   shadow-acc-purple/20">
             <Layers size={20} />
           </div>
           Simulasi Average Up / Down
@@ -63,7 +63,7 @@ export default function AvgUpDownSection() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         {/* Left Input Card */}
-        <div className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col justify-between min-h-[440px]">
+        <div className="bg-card  rounded-3xl p-6 sm:p-8   flex flex-col justify-between min-h-[440px]">
           <div>
             <div className="flex items-center justify-between border-b border-border-custom pb-4 mb-6">
               <div className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export default function AvgUpDownSection() {
                     <input
                       type="text"
                       inputMode="numeric"
-                      className="w-full bg-card border border-border-custom rounded-lg px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple transition-all"
+                      className="w-full bg-card  rounded-lg px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple transition-all"
                       value={row.price ? formatNumber(row.price) : ''}
                       onChange={(e) => handleUpdateRow(idx, 'price', e.target.value)}
                       placeholder="e.g. 1000"
@@ -101,7 +101,7 @@ export default function AvgUpDownSection() {
                     <input
                       type="text"
                       inputMode="numeric"
-                      className="w-full bg-card border border-border-custom rounded-lg px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple transition-all"
+                      className="w-full bg-card  rounded-lg px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple transition-all"
                       value={row.lot ? formatNumber(row.lot) : ''}
                       onChange={(e) => handleUpdateRow(idx, 'lot', e.target.value)}
                       placeholder="e.g. 10"
@@ -123,7 +123,7 @@ export default function AvgUpDownSection() {
 
             <button
               onClick={handleAddRow}
-              className="w-full bg-card border border-border-custom text-main font-semibold py-2.5 px-4 rounded-xl text-sm transition-all duration-200 hover:border-acc-purple hover:text-acc-purple cursor-pointer mt-4 flex items-center justify-center gap-1.5"
+              className="w-full bg-card  text-main font-semibold py-2.5 px-4 rounded-xl text-sm transition-all duration-200 hover:border-acc-purple hover:text-acc-purple cursor-pointer mt-4 flex items-center justify-center gap-1.5"
             >
               <Plus size={16} />
               <span>Tambah Baris Pembelian</span>
@@ -144,7 +144,7 @@ export default function AvgUpDownSection() {
                   <input
                     type="text"
                     inputMode="numeric"
-                    className="w-full bg-page border border-border-custom rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple transition-all"
+                    className="w-full bg-page  rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple transition-all"
                     value={targetAvg ? formatNumber(targetAvg) : ''}
                     onChange={(e) =>
                       setTargetAvg(parseInt(e.target.value.replace(/\D/g, ''), 10) || 0)
@@ -160,7 +160,7 @@ export default function AvgUpDownSection() {
                   <input
                     type="text"
                     inputMode="numeric"
-                    className="w-full bg-page border border-border-custom rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple transition-all"
+                    className="w-full bg-page  rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple transition-all"
                     value={newPrice ? formatNumber(newPrice) : ''}
                     onChange={(e) =>
                       setNewPrice(parseInt(e.target.value.replace(/\D/g, ''), 10) || 0)

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { Download, Share2, Check, TrendingUp } from 'lucide-react';
+import { Download, Share2, Check } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import WebsiteBrand from './WebsiteBrand';
 
@@ -15,6 +15,7 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
   const cardRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const logAction = async (action: 'download' | 'share') => {
     try {
@@ -31,67 +32,81 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
   const handleDownload = async () => {
     if (!cardRef.current) return;
     setDownloading(true);
-    try {
-      const dataUrl = await toPng(cardRef.current, {
-        pixelRatio: 2,
-        cacheBust: true,
-      });
-      const link = document.createElement('a');
-      link.download = `${fileName}.png`;
-      link.href = dataUrl;
-      link.click();
-      logAction('download');
-    } catch (err) {
-      console.error('Export error:', err);
-    } finally {
-      setDownloading(false);
-    }
+    setIsExporting(true);
+
+    // Wait for state to update and DOM to re-render before capturing
+    setTimeout(async () => {
+      try {
+        const dataUrl = await toPng(cardRef.current!, {
+          pixelRatio: 2,
+          cacheBust: true,
+        });
+        const link = document.createElement('a');
+        link.download = `${fileName}.png`;
+        link.href = dataUrl;
+        link.click();
+        logAction('download');
+      } catch (err) {
+        console.error('Export error:', err);
+      } finally {
+        setIsExporting(false);
+        setDownloading(false);
+      }
+    }, 150);
   };
 
   const handleShare = async () => {
     if (!cardRef.current) return;
-    try {
-      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true });
-      const blob = await (await fetch(dataUrl)).blob();
-      const file = new File([blob], `${fileName}.png`, { type: 'image/png' });
+    setIsExporting(true);
 
-      logAction('share');
+    // Wait for state to update and DOM to re-render before capturing
+    setTimeout(async () => {
+      try {
+        const dataUrl = await toPng(cardRef.current!, { pixelRatio: 2, cacheBust: true });
+        const blob = await (await fetch(dataUrl)).blob();
+        const file = new File([blob], `${fileName}.png`, { type: 'image/png' });
 
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'Hasil Kalkulator Saham',
-          text: 'Lihat simulasi perhitungan saham dari { window.location.hostname }',
-        });
-      } else {
-        // Fallback to copying image or link
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            'image/png': blob,
-          }),
-        ]);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
+        logAction('share');
+
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'Hasil Kalkulator Saham',
+            text: 'Lihat simulasi perhitungan saham dari Kalkulator Saham',
+          });
+        } else {
+          // Fallback to copying image or link
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'image/png': blob,
+            }),
+          ]);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        }
+      } catch (err) {
+        console.error('Share error:', err);
+      } finally {
+        setIsExporting(false);
       }
-    } catch (err) {
-      console.error('Share error:', err);
-    }
+    }, 150);
   };
 
   return (
     <div className="flex flex-col gap-3">
       {/* Target export card container */}
-      <div ref={cardRef} className="bg-card border border-border-custom rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+      <div ref={cardRef} className="bg-card  rounded-3xl p-6 sm:p-8  relative overflow-hidden">
         {children}
 
-        {/* Watermark in Bottom-Left */}
-        <div className="flex items-center justify-between text-[11px] text-muted border-t border-border-custom pt-4 mt-6">
-          <div className="flex items-center gap-1.5 font-bold text-acc-blue">
-            <i className="fa-solid fa-chart-line text-xs"></i>
-            <WebsiteBrand />
+        {/* Watermark in Bottom-Left (Only visible when exporting) */}
+        {isExporting && (
+          <div className="flex items-center justify-between text-[11px] text-muted border-t border-border-custom pt-4 mt-6">
+            <div className="bg-blue-500 rounded-full px-5 py-2 text-white font-semibold text-xs">
+              <WebsiteBrand />
+            </div>
+            <span>Kalkulator Saham</span>
           </div>
-          <span>Simulasi Saham BEI</span>
-        </div>
+        )}
       </div>
 
       <div className="flex gap-3 mt-3">
@@ -106,7 +121,7 @@ export default function ExportCardWrapper({ children, fileName, calculatorType }
 
         <button
           onClick={handleShare}
-          className="flex items-center justify-center gap-2 bg-card border border-border-custom text-main font-semibold py-3 px-5 rounded-2xl text-sm transition-all duration-200 hover:border-acc-blue hover:text-acc-blue cursor-pointer"
+          className="flex items-center justify-center gap-2 bg-card  text-main font-semibold py-3 px-5 rounded-2xl text-sm transition-all duration-200 hover:border-acc-blue hover:text-acc-blue cursor-pointer"
           title="Bagikan Gambar"
         >
           {copied ? <Check size={17} className="text-acc-green" /> : <Share2 size={17} />}
