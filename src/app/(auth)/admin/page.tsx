@@ -24,6 +24,9 @@ import {
   ChevronDown,
   Sun,
   Moon,
+  ArrowUpRight,
+  Activity,
+  Clock,
 } from 'lucide-react';
 import Link from 'next/link';
 import { FractionRule, DEFAULT_FRACTION_RULES, formatNumber, formatIDR } from '@/lib/calculations';
@@ -473,63 +476,168 @@ export default function AdminDashboardPage() {
           {activeTab === 'analytics' && (
             <div className="space-y-6">
               
+              {/* TOP HEADER CONTROLS (from Gambar 3) */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center bg-card border border-border-custom p-1 rounded-2xl w-fit shadow-sm">
+                  <button className="bg-acc-blue text-white px-5 py-2 rounded-xl text-xs font-extrabold shadow-sm transition-all cursor-pointer">
+                    Total User
+                  </button>
+                  <button className="text-muted hover:text-main px-5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer">
+                    Daily Activity User
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={loadData}
+                    className="flex items-center gap-2 bg-acc-blue text-white hover:bg-acc-blue/90 font-bold px-4 py-2 rounded-xl text-xs transition-all cursor-pointer shadow-sm"
+                  >
+                    <RefreshCw size={14} />
+                    <span>Refetch Data</span>
+                  </button>
+                  <div className="flex items-center gap-1.5 bg-card border border-border-custom px-3 py-2 rounded-xl text-xs text-muted shadow-sm">
+                    <Clock size={14} className="text-acc-blue" />
+                    <span>Last Fetched At <strong className="text-main">{new Date().toLocaleTimeString('id-ID')} (just now)</strong></span>
+                  </div>
+                </div>
+              </div>
+
               {/* Analytics Header Title */}
               <div>
                 <div className="text-[10px] font-bold text-acc-blue uppercase tracking-widest">Analytics Overview</div>
                 <h2 className="text-xl sm:text-2xl font-extrabold text-main mt-0.5">Pemantauan Trafik & Aktivitas Pengguna</h2>
               </div>
 
-              {/* STATS CARD GRID */}
+              {/* STATS CARD GRID (Matching Gambar 1 & Gambar 3 100%) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 {/* CARD 1: USERS (TRAFFIC) */}
-                <div className="bg-gradient-to-br from-blue-600 to-blue-500 text-white rounded-3xl p-6 shadow-lg shadow-blue-500/10 flex flex-col justify-between h-44 relative overflow-hidden">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <span className="text-[10px] font-extrabold tracking-widest uppercase opacity-75 block">Total Users</span>
-                      <span className="text-3xl font-extrabold block mt-2">{formatNumber(analytics?.summary.totalTraffic || 0)}</span>
+                <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm space-y-4 transition-all hover:shadow-md">
+                  {/* Card Category Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-sub-blue text-acc-blue flex items-center justify-center">
+                        <User size={16} />
+                      </div>
+                      <span className="font-extrabold text-sm text-main">Users</span>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                      <User size={20} className="text-white" />
+                    <div className="w-7 h-7 rounded-full bg-sub-blue text-acc-blue flex items-center justify-center">
+                      <ArrowUpRight size={14} />
                     </div>
                   </div>
-                  <div className="flex justify-between items-center text-[10px] font-bold border-t border-white/10 pt-4 mt-auto">
-                    <span>ACTIVE NOW: <strong className="text-white text-xs ml-0.5">1</strong></span>
-                    <span>DAILY ACTIVE: <strong className="text-white text-xs ml-0.5">1</strong></span>
+
+                  {/* Inner Bold Colored Banner */}
+                  <div className="bg-blue-600 text-white rounded-2xl p-5 shadow-sm shadow-blue-600/20 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-85 block">Total Users</span>
+                      <span className="text-3xl font-extrabold mt-1 block">{formatNumber(analytics?.summary.totalTraffic || 0)}</span>
+                    </div>
+                    <User size={28} className="opacity-90" />
+                  </div>
+
+                  {/* Sub-stats Row */}
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Active Now</span>
+                      <span className="text-base font-extrabold text-main mt-0.5 block">1</span>
+                    </div>
+                    <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Daily Active</span>
+                      <span className="text-base font-extrabold text-main mt-0.5 block">1</span>
+                    </div>
+                  </div>
+
+                  {/* Footer details */}
+                  <div className="flex items-center gap-3 text-[10px] font-bold text-muted pt-1">
+                    <span className="flex items-center gap-1 text-acc-blue"><Activity size={12} /> Realtime</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1"><TrendingUp size={12} /> Avg / day</span>
                   </div>
                 </div>
 
                 {/* CARD 2: DOWNLOADS */}
-                <div className="bg-gradient-to-br from-purple-600 to-purple-500 text-white rounded-3xl p-6 shadow-lg shadow-purple-500/10 flex flex-col justify-between h-44 relative overflow-hidden">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <span className="text-[10px] font-extrabold tracking-widest uppercase opacity-75 block">Unduh Gambar PNG</span>
-                      <span className="text-3xl font-extrabold block mt-2">{formatNumber(analytics?.summary.totalDownloads || 0)}</span>
+                <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm space-y-4 transition-all hover:shadow-md">
+                  {/* Card Category Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center">
+                        <Download size={16} />
+                      </div>
+                      <span className="font-extrabold text-sm text-main">Unduh PNG</span>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                      <Download size={20} className="text-white" />
+                    <div className="w-7 h-7 rounded-full bg-purple-500/10 text-purple-600 flex items-center justify-center">
+                      <ArrowUpRight size={14} />
                     </div>
                   </div>
-                  <div className="flex justify-between items-center text-[10px] font-bold border-t border-white/10 pt-4 mt-auto">
-                    <span>ACTIVE ADS / CALC: <strong className="text-white text-xs ml-0.5">3</strong></span>
-                    <span>CAMPAIGNS / ACTIONS: <strong className="text-white text-xs ml-0.5">14</strong></span>
+
+                  {/* Inner Bold Colored Banner */}
+                  <div className="bg-purple-600 text-white rounded-2xl p-5 shadow-sm shadow-purple-600/20 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-85 block">Total Unduh PNG</span>
+                      <span className="text-3xl font-extrabold mt-1 block">{formatNumber(analytics?.summary.totalDownloads || 0)}</span>
+                    </div>
+                    <Download size={28} className="opacity-90" />
+                  </div>
+
+                  {/* Sub-stats Row */}
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Aksi Unduh</span>
+                      <span className="text-base font-extrabold text-main mt-0.5 block">{analytics?.summary.totalDownloads || 0}</span>
+                    </div>
+                    <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Kalkulator Aktif</span>
+                      <span className="text-base font-extrabold text-main mt-0.5 block">3</span>
+                    </div>
+                  </div>
+
+                  {/* Footer details */}
+                  <div className="flex items-center gap-2 text-[10px] font-bold text-muted pt-1">
+                    <Activity size={12} className="text-purple-600" />
+                    <span>Performa Ekspor PNG Pengguna</span>
                   </div>
                 </div>
 
                 {/* CARD 3: SHARES */}
-                <div className="bg-gradient-to-br from-emerald-600 to-emerald-500 text-white rounded-3xl p-6 shadow-lg shadow-emerald-500/10 flex flex-col justify-between h-44 relative overflow-hidden">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <span className="text-[10px] font-extrabold tracking-widest uppercase opacity-75 block">Total Bagikan</span>
-                      <span className="text-3xl font-extrabold block mt-2">{formatNumber(analytics?.summary.totalShares || 0)}</span>
+                <div className="bg-card border border-border-custom rounded-3xl p-6 shadow-sm space-y-4 transition-all hover:shadow-md">
+                  {/* Card Category Header */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                        <Share2 size={16} />
+                      </div>
+                      <span className="font-extrabold text-sm text-main">Bagikan PNG</span>
                     </div>
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                      <Share2 size={20} className="text-white" />
+                    <div className="w-7 h-7 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                      <ArrowUpRight size={14} />
                     </div>
                   </div>
-                  <div className="flex justify-between items-center text-[10px] font-bold border-t border-white/10 pt-4 mt-auto">
-                    <span>TICKET SOLD / EXPORTS: <strong className="text-white text-xs ml-0.5">0</strong></span>
-                    <span>TOTAL REVENUE: <strong className="text-white text-xs ml-0.5">Rp 0</strong></span>
+
+                  {/* Inner Bold Colored Banner */}
+                  <div className="bg-emerald-600 text-white rounded-2xl p-5 shadow-sm shadow-emerald-600/20 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-85 block">Total Bagikan PNG</span>
+                      <span className="text-3xl font-extrabold mt-1 block">{formatNumber(analytics?.summary.totalShares || 0)}</span>
+                    </div>
+                    <Share2 size={28} className="opacity-90" />
+                  </div>
+
+                  {/* Sub-stats Row */}
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Aksi Bagikan</span>
+                      <span className="text-base font-extrabold text-main mt-0.5 block">{analytics?.summary.totalShares || 0}</span>
+                    </div>
+                    <div className="bg-sub-slate/60 p-3 rounded-2xl border border-border-custom/30">
+                      <span className="text-[9px] font-extrabold uppercase tracking-wider text-muted block">Status Revenue</span>
+                      <span className="text-base font-extrabold text-emerald-600 mt-0.5 block">Rp 0</span>
+                    </div>
+                  </div>
+
+                  {/* Footer details */}
+                  <div className="flex items-center gap-2 text-[10px] font-bold text-muted pt-1">
+                    <Activity size={12} className="text-emerald-600" />
+                    <span>Interaksi Sosial & Share Link</span>
                   </div>
                 </div>
               </div>
