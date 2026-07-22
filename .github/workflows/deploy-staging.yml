@@ -49,6 +49,15 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/kalkulator-saham:${{ env.IMAGE_TAG }}
 
+      - name: Create target directory on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            mkdir -p ../apps/${{ env.APP_NAME }}
+
       - name: Copy docker-compose.yml to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
