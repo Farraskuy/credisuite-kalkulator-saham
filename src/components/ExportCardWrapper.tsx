@@ -116,7 +116,7 @@ export default function ExportCardWrapper({
       </div>
 
       {/* Buttons - NO SHADOW, NO BORDER */}
-      <div className="flex gap-3 mt-3">
+      <div className="flex flex-col sm:flex-row gap-3 mt-3">
         <button
           onClick={handleDownload}
           disabled={downloading}

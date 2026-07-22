@@ -154,7 +154,7 @@ export default function AraArbSection({ fractionRules, ticker: propTicker, onTic
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-4 mb-6">
+          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 mt-4 mb-6">
             <div className="bg-sub-green text-acc-green rounded-2xl p-4 space-y-1">
               <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Persentase ARA</span>
               <span className="text-base font-extrabold block text-acc-green">+{result.araPercent.toFixed(2)}%</span>
@@ -178,7 +178,7 @@ export default function AraArbSection({ fractionRules, ticker: propTicker, onTic
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 mt-4">
             <div className="bg-sub-pink text-acc-pink rounded-2xl p-4 space-y-1">
               <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Persentase ARB</span>
               <span className="text-base font-extrabold block text-acc-pink">-{result.arbPercent.toFixed(2)}%</span>

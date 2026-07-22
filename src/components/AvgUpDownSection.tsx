@@ -239,7 +239,7 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-4 mb-4">
+          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 mt-4 mb-4">
             <div className="bg-sub-purple text-acc-purple rounded-2xl p-4 space-y-1">
               <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Total Lembar Saham</span>
               <span className="text-lg font-extrabold block text-main">{formatNumber(result.totalLembar)} Lembar</span>

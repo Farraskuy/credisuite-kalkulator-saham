@@ -295,7 +295,7 @@ export default function PredictionSection({
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2">
                   <div className="min-w-0">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">
                       Harga Jual Valid BEI (Ceil)
@@ -340,7 +340,7 @@ export default function PredictionSection({
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2">
                   <div className="min-w-0">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-muted flex flex-wrap items-center gap-1">
                       Harga Jual Valid BEI (Floor)
