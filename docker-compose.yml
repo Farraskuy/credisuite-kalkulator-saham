@@ -36,7 +36,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: sh -c "npx prisma@6.4.0 db push --skip-generate && npm start"
+    command: sh -c "npx prisma@6.4.0 db push --skip-generate && node server.js"
     networks:
       - kalkulator-network
       - proxy-network
