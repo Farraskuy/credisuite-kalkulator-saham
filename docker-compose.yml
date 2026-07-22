@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-123}
       POSTGRES_DB: kalkulator_saham
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -32,7 +32,7 @@ services:
       DATABASE_URL: postgresql://postgres:${DB_PASSWORD:-123}@postgres:5432/kalkulator_saham
       SESSION_SECRET: ${SESSION_SECRET:-local-development-secret-change-in-production}
     ports:
-      - "3000:3000"
+      - "${APP_PORT:-3000}:3000"
     depends_on:
       postgres:
         condition: service_healthy

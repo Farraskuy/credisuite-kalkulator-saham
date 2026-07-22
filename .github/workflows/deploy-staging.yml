@@ -1,10 +1,9 @@
-name: Deploy Kalkulator Saham (Production)
+name: Deploy Kalkulator Saham (Staging)
 
 on:
   push:
     branches:
-      - main
-      - production
+      - staging
 
 jobs:
   build-and-deploy:
@@ -18,8 +17,8 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          echo "APP_NAME=kalkulator-saham" >> $GITHUB_ENV
-          echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+          echo "APP_NAME=kalkulator-saham-staging" >> $GITHUB_ENV
+          echo "IMAGE_TAG=staging" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -60,7 +59,7 @@ jobs:
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
         env:
-          ENV_PRODUCTION: ${{ secrets.ENV_PRODUCTION }}
+          ENV_STAGING: ${{ secrets.ENV_STAGING }}
           APP_NAME: ${{ env.APP_NAME }}
           IMAGE_TAG: ${{ env.IMAGE_TAG }}
           GHCR_PAT: ${{ secrets.GHCR_PAT }}
@@ -70,7 +69,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          envs: ENV_PRODUCTION,APP_NAME,IMAGE_TAG,GHCR_PAT,GITHUB_ACTOR,OWNER_LC
+          envs: ENV_STAGING,APP_NAME,IMAGE_TAG,GHCR_PAT,GITHUB_ACTOR,OWNER_LC
           script: |
             mkdir -p ../apps/$APP_NAME
             cd ../apps/$APP_NAME
@@ -78,7 +77,7 @@ jobs:
             echo "APP_NAME=$APP_NAME" > .env
             echo "IMAGE_TAG=$IMAGE_TAG" >> .env
             echo "OWNER_LC=$OWNER_LC" >> .env
-            echo "$ENV_PRODUCTION" >> .env
+            echo "$ENV_STAGING" >> .env
             
             echo "$GHCR_PAT" | sudo docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
             
