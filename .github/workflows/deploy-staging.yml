@@ -22,11 +22,15 @@ jobs:
           if [ "${{ github.ref_name }}" = "staging" ]; then
             echo "APP_NAME=kalkulator-saham-staging" >> $GITHUB_ENV
             echo "IMAGE_TAG=staging" >> $GITHUB_ENV
-            echo "ENV_CONTENT=${{ secrets.ENV_STAGING }}" >> $GITHUB_ENV
+            echo "ENV_CONTENT<<EOF" >> $GITHUB_ENV
+            echo "${{ secrets.ENV_STAGING }}" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
           else
             echo "APP_NAME=kalkulator-saham" >> $GITHUB_ENV
             echo "IMAGE_TAG=production" >> $GITHUB_ENV
-            echo "ENV_CONTENT=${{ secrets.ENV_PRODUCTION }}" >> $GITHUB_ENV
+            echo "ENV_CONTENT<<EOF" >> $GITHUB_ENV
+            echo "${{ secrets.ENV_PRODUCTION }}" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
           fi
           echo "OWNER_LC=${OWNER,,}" >> $GITHUB_ENV
         env:
