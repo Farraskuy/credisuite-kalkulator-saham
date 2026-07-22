@@ -3,7 +3,7 @@ name: Deploy Kalkulator Saham (Staging)
 on:
   push:
     branches:
-      - production
+      - staging
 
 jobs:
   build-and-deploy:
