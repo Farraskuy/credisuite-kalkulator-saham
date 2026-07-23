@@ -5,13 +5,8 @@ import { Layers, Plus, Trash2, Calculator } from 'lucide-react';
 import { calculateAverage, formatIDR, formatNumber, PurchaseRow } from '@/lib/calculations';
 import ExportCardWrapper from './ExportCardWrapper';
 
-interface Props {
-  ticker?: string;
-  onTickerChange?: (ticker: string) => void;
-}
-
-export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }: Props) {
-  const [internalTicker, setInternalTicker] = useState<string>('BBRI');
+export default function AvgUpDownSection() {
+  const [ticker, setTicker] = useState<string>('BBRI');
   const [rows, setRows] = useState<PurchaseRow[]>([
     { id: '1', price: 1000, lot: 10 },
     { id: '2', price: 800, lot: 15 },
@@ -20,16 +15,12 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
   const [targetAvg, setTargetAvg] = useState<number>(0);
   const [newPrice, setNewPrice] = useState<number>(0);
 
-  const ticker = propTicker !== undefined ? propTicker : internalTicker;
   const result = calculateAverage(rows);
 
   const handleTickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Validasi JS: Hapus semua karakter non-huruf dan batasi maksimal 4 karakter
     const cleanTicker = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 4).toUpperCase();
-    if (onTickerChange) {
-      onTickerChange(cleanTicker);
-    } else {
-      setInternalTicker(cleanTicker);
-    }
+    setTicker(cleanTicker);
   };
 
   const handleUpdateRow = (index: number, field: 'price' | 'lot', value: string) => {
@@ -49,6 +40,7 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
     setRows(rows.filter((_, i) => i !== index));
   };
 
+  // Calculate needed lots for Target Average
   let neededLots = 0;
   let neededCapital = 0;
 
@@ -70,10 +62,10 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
 
   return (
     <section id="avg-up-down" className="space-y-6 scroll-mt-20">
-      <div className="pb-2">
+      <div className=" pb-4">
         <div className="text-xs font-bold text-acc-purple uppercase tracking-wider">Kalkulator #2</div>
         <h2 className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5 text-main mt-1">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-purple">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-purple  shadow-acc-purple/20">
             <Layers size={20} />
           </div>
           Simulasi Average Up / Down
@@ -81,10 +73,10 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Left Form Card - NO SHADOW, NO BORDER */}
-        <div className="bg-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between min-h-[440px]">
+        {/* Left Form Card */}
+        <div className="bg-card  rounded-3xl p-6 sm:p-8  flex flex-col justify-between min-h-[440px]">
           <div>
-            <div className="flex items-center justify-between pb-4 mb-6">
+            <div className="flex items-center justify-between  pb-4 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-purple text-acc-purple">
                   <Layers size={20} />
@@ -93,16 +85,14 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
               </div>
             </div>
 
-            <div className="flex flex-col justify-end mb-6">
-              <div className="min-h-[32px] flex items-end pb-1">
-                <label htmlFor="avg-ticker" className="text-xs font-bold text-muted block leading-tight">
-                  Kode Ticker (A-Z)
-                </label>
-              </div>
+            <div className="space-y-1 mb-6">
+              <label htmlFor="avg-ticker" className="text-xs font-bold text-muted block">
+                Kode Ticker Saham (Max 4 Huruf)
+              </label>
               <input
                 id="avg-ticker"
                 type="text"
-                className="w-full bg-page rounded-xl px-4 py-3 text-main font-bold outline-none focus:ring-2 focus:ring-acc-purple/20 transition-all uppercase placeholder-gray-400"
+                className="w-full bg-page  rounded-xl px-4 py-3 text-main font-bold outline-none focus:border-acc-purple focus:ring-2 focus:ring-acc-purple/10 transition-all uppercase placeholder-gray-400"
                 value={ticker}
                 onChange={handleTickerChange}
                 placeholder="e.g. BBRI"
@@ -117,7 +107,7 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
                     <input
                       type="text"
                       inputMode="numeric"
-                      className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-purple/20 text-xs"
+                      className="w-full bg-page  rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple text-xs"
                       value={row.price ? formatNumber(row.price) : ''}
                       onChange={(e) => handleUpdateRow(index, 'price', e.target.value)}
                       placeholder="Harga (Rp)"
@@ -127,7 +117,7 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
                     <input
                       type="text"
                       inputMode="numeric"
-                      className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-purple/20 text-xs"
+                      className="w-full bg-page  rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-purple text-xs"
                       value={row.lot ? formatNumber(row.lot) : ''}
                       onChange={(e) => handleUpdateRow(index, 'lot', e.target.value)}
                       placeholder="Lot"
@@ -157,50 +147,46 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
             </button>
           </div>
 
-          {/* Calculator helper for Target Average - NO BORDER */}
-          <div className="pt-6 mt-6">
+          {/* Calculator helper for Target Average */}
+          <div className="border-t border-border-custom pt-6 mt-6">
             <div className="flex items-center gap-2 font-bold text-xs text-muted mb-3">
               <Calculator size={15} /> Hitung Kebutuhan Lot untuk Target Average
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label className="text-[10px] font-bold text-muted block leading-tight">Target Avg Baru (Rp)</label>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] font-bold text-muted block mb-1">Target Avg Baru (Rp)</label>
                 <input
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page rounded-xl px-3 py-2 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-purple/20 text-xs"
+                  className="w-full bg-page rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple text-xs"
                   value={targetAvg ? formatNumber(targetAvg) : ''}
                   onChange={(e) => {
                     const val = e.target.value.replace(/\D/g, '');
                     setTargetAvg(val ? parseInt(val, 10) : 0);
                   }}
-                  placeholder="Target Avg"
+                  placeholder="Masukkan target avg"
                 />
               </div>
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label className="text-[10px] font-bold text-muted block leading-tight">Harga Pembelian Baru (Rp)</label>
-                </div>
+              <div>
+                <label className="text-[10px] font-bold text-muted block mb-1">Harga Pembelian Baru (Rp)</label>
                 <input
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page rounded-xl px-3 py-2 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-purple/20 text-xs"
+                  className="w-full bg-page rounded-xl px-3 py-2 text-main font-semibold outline-none focus:border-acc-purple text-xs"
                   value={newPrice ? formatNumber(newPrice) : ''}
                   onChange={(e) => {
                     const val = e.target.value.replace(/\D/g, '');
                     setNewPrice(val ? parseInt(val, 10) : 0);
                   }}
-                  placeholder="Harga Baru"
+                  placeholder="Masukkan harga baru"
                 />
               </div>
             </div>
 
             {neededLots > 0 && (
-              <div className="bg-sub-purple rounded-2xl p-3 mt-3 text-xs">
-                <span className="font-bold text-acc-purple block mb-0.5">Kebutuhan Tambahan:</span>
-                <div className="flex justify-between text-muted text-[11px]">
+              <div className="bg-sub-purple border border-acc-purple/20 rounded-2xl p-3 mt-3 text-xs">
+                <span className="font-bold text-acc-purple block mb-1">Kebutuhan Tambahan:</span>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 text-muted text-[11px]">
                   <span>Jumlah Lot: <strong className="text-main">{formatNumber(neededLots)} Lot</strong></span>
                   <span>Estimasi Modal: <strong className="text-main">{formatIDR(neededCapital)}</strong></span>
                 </div>
@@ -209,27 +195,26 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
           </div>
         </div>
 
-        {/* Right Output Card - NO SHADOW, NO BORDER, NO GRADIENT */}
+        {/* Right Output Card */}
         <ExportCardWrapper fileName={cleanFileName} calculatorType="average">
-          <div className="flex items-center justify-between pb-4 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-purple text-acc-purple">
+          <div className="flex items-start justify-between pb-4 mb-6 gap-2">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-sub-purple text-acc-purple">
                 <Layers size={20} />
               </div>
-              <div>
-                <span className="font-extrabold text-main block leading-tight">
+              <div className="min-w-0">
+                <span className="font-extrabold text-main block leading-tight break-words">
                   Simulasi Average {ticker ? ticker : 'SAHAM'}
                 </span>
                 <span className="text-[10px] text-muted block mt-0.5">{result.rowCount} Pembelian Dikalkulasi</span>
               </div>
             </div>
-            <span className="text-xs font-bold text-acc-purple bg-sub-purple px-2.5 py-1 rounded-lg">
+            <span className="shrink-0 text-xs font-bold text-acc-purple bg-sub-purple px-2.5 py-1 rounded-lg whitespace-nowrap">
               {formatNumber(result.totalLot)} Lot
             </span>
           </div>
 
-          {/* Average Price Box - SOLID COLOR */}
-          <div className="bg-acc-purple text-white rounded-2xl p-5 flex items-center justify-between">
+          <div className="bg-gradient-to-r from-acc-purple to-acc-purple/90 text-white rounded-2xl p-5 flex items-center justify-between shadow-md shadow-acc-purple/10">
             <div>
               <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-85">Harga Rata-Rata per Lembar (Avg Price)</div>
               <div className="text-2xl sm:text-3xl font-extrabold mt-1">{formatIDR(result.avgPrice)}</div>
@@ -239,7 +224,7 @@ export default function AvgUpDownSection({ ticker: propTicker, onTickerChange }:
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 mt-4 mb-4">
+          <div className="grid grid-cols-2 gap-4 mt-4 mb-4">
             <div className="bg-sub-purple text-acc-purple rounded-2xl p-4 space-y-1">
               <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Total Lembar Saham</span>
               <span className="text-lg font-extrabold block text-main">{formatNumber(result.totalLembar)} Lembar</span>

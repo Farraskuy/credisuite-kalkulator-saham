@@ -6,18 +6,12 @@ import { toPng } from 'html-to-image';
 import WebsiteBrand from './WebsiteBrand';
 
 interface Props {
-  children: React.ReactNode | ((props: { isExporting: boolean }) => React.ReactNode);
+  children: React.ReactNode;
   fileName: string;
   calculatorType: 'ara-arb' | 'average' | 'prediction';
-  hideDefaultWatermark?: boolean;
 }
 
-export default function ExportCardWrapper({
-  children,
-  fileName,
-  calculatorType,
-  hideDefaultWatermark = false,
-}: Props) {
+export default function ExportCardWrapper({ children, fileName, calculatorType }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -40,6 +34,7 @@ export default function ExportCardWrapper({
     setDownloading(true);
     setIsExporting(true);
 
+    // Wait for state to update and DOM to re-render before capturing
     setTimeout(async () => {
       try {
         const dataUrl = await toPng(cardRef.current!, {
@@ -64,6 +59,7 @@ export default function ExportCardWrapper({
     if (!cardRef.current) return;
     setIsExporting(true);
 
+    // Wait for state to update and DOM to re-render before capturing
     setTimeout(async () => {
       try {
         const dataUrl = await toPng(cardRef.current!, { pixelRatio: 2, cacheBust: true });
@@ -76,9 +72,10 @@ export default function ExportCardWrapper({
           await navigator.share({
             files: [file],
             title: 'Hasil Kalkulator Saham',
-            text: 'Lihat simulasi perhitungan saham dari hitungsaham.com',
+            text: 'Lihat simulasi perhitungan saham dari Kalkulator Saham',
           });
         } else {
+          // Fallback to copying image or link
           await navigator.clipboard.write([
             new ClipboardItem({
               'image/png': blob,
@@ -95,19 +92,16 @@ export default function ExportCardWrapper({
     }, 150);
   };
 
-  const renderedContent =
-    typeof children === 'function' ? children({ isExporting }) : children;
-
   return (
     <div className="flex flex-col gap-3">
-      {/* Target export card container - NO SHADOW, NO BORDER */}
-      <div ref={cardRef} className="bg-card rounded-3xl p-6 sm:p-8 relative overflow-hidden">
-        {renderedContent}
+      {/* Target export card container */}
+      <div ref={cardRef} className="bg-card  rounded-3xl p-6 sm:p-8  relative overflow-hidden">
+        {children}
 
-        {/* Default Watermark at Bottom (Only visible when exporting and not hidden) */}
-        {isExporting && !hideDefaultWatermark && (
-          <div className="flex items-center justify-between text-[11px] text-muted pt-4 mt-6">
-            <div className="bg-acc-blue rounded-full px-5 py-2 text-white font-semibold text-xs">
+        {/* Watermark in Bottom-Left (Only visible when exporting) */}
+        {isExporting && (
+          <div className="flex items-center justify-between text-[11px] text-muted border-t border-border-custom pt-4 mt-6">
+            <div className="bg-blue-500 rounded-full px-5 py-2 text-white font-semibold text-xs">
               <WebsiteBrand />
             </div>
             <span>Kalkulator Saham</span>
@@ -115,12 +109,11 @@ export default function ExportCardWrapper({
         )}
       </div>
 
-      {/* Buttons - NO SHADOW, NO BORDER */}
-      <div className="flex flex-col sm:flex-row gap-3 mt-3">
+      <div className="flex gap-3 mt-3">
         <button
           onClick={handleDownload}
           disabled={downloading}
-          className="grow flex items-center justify-center gap-2 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-3 px-6 rounded-2xl text-sm transition-all duration-200 cursor-pointer disabled:opacity-50"
+          className="grow flex items-center justify-center gap-2 bg-acc-blue hover:bg-acc-blue/90 text-white font-bold py-3 px-6 rounded-2xl text-sm transition-all duration-200 shadow-md shadow-acc-blue/15 cursor-pointer disabled:opacity-50"
         >
           <Download size={17} />
           <span>{downloading ? 'Membuat PNG...' : 'Unduh Gambar PNG'}</span>
@@ -128,7 +121,7 @@ export default function ExportCardWrapper({
 
         <button
           onClick={handleShare}
-          className="flex items-center justify-center gap-2 bg-sub-slate text-main font-semibold py-3 px-5 rounded-2xl text-sm transition-all duration-200 hover:text-acc-blue cursor-pointer"
+          className="flex items-center justify-center gap-2 bg-card  text-main font-semibold py-3 px-5 rounded-2xl text-sm transition-all duration-200 hover:border-acc-blue hover:text-acc-blue cursor-pointer"
           title="Bagikan Gambar"
         >
           {copied ? <Check size={17} className="text-acc-green" /> : <Share2 size={17} />}

@@ -17,12 +17,14 @@ import {
   Moon,
   ChevronDown,
   RefreshCw,
+  HelpCircle,
 } from 'lucide-react';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: BarChart3 },
   { href: '/admin/fractions', label: 'Fraksi Harga BEI', icon: ListRestart },
   { href: '/admin/ara-arb', label: 'Aturan ARA / ARB', icon: Percent },
+  { href: '/admin/faqs', label: 'Kelola FAQ', icon: HelpCircle },
   { href: '/admin/settings', label: 'Syarat & Ketentuan', icon: FileText },
   { href: '/admin/security', label: 'Ganti Password', icon: Lock },
 ];

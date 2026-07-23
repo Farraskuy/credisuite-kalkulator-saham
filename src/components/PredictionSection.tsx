@@ -1,25 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Target, TrendingUp, TrendingDown, Coins } from 'lucide-react';
+import { Target, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { kalkulasiTargetSaham, formatIDR, formatNumber, FractionRule } from '@/lib/calculations';
 import ExportCardWrapper from './ExportCardWrapper';
-import WebsiteBrand from './WebsiteBrand';
 
 interface Props {
   fractionRules?: FractionRule[];
   tax?: number;
-  ticker?: string;
-  onTickerChange?: (ticker: string) => void;
 }
 
-export default function PredictionSection({
-  fractionRules,
-  tax = 0.0,
-  ticker: propTicker,
-  onTickerChange,
-}: Props) {
-  const [internalTicker, setInternalTicker] = useState<string>('BBRI');
+export default function PredictionSection({ fractionRules, tax = 0.0 }: Props) {
+  const [ticker, setTicker] = useState<string>('BBRI');
   const [clientName, setClientName] = useState<string>('');
   const [hargaBeli, setHargaBeli] = useState<number>(1000);
   const [lot, setLot] = useState<number>(10);
@@ -27,8 +19,6 @@ export default function PredictionSection({
   const [feeJual, setFeeJual] = useState<number>(0.25); // 0.25%
   const [targetUntungRp, setTargetUntungRp] = useState<number>(250000);
   const [targetRugiRp, setTargetRugiRp] = useState<number>(100000);
-
-  const ticker = propTicker !== undefined ? propTicker : internalTicker;
 
   const result = kalkulasiTargetSaham(
     {
@@ -44,12 +34,9 @@ export default function PredictionSection({
   );
 
   const handleTickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Validasi JS: Hapus semua karakter non-huruf (angka & simbol) dan batasi maksimal 4 karakter
     const cleanTicker = e.target.value.replace(/[^a-zA-Z]/g, '').slice(0, 4).toUpperCase();
-    if (onTickerChange) {
-      onTickerChange(cleanTicker);
-    } else {
-      setInternalTicker(cleanTicker);
-    }
+    setTicker(cleanTicker);
   };
 
   const handleNumChange = (setter: (val: number) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,23 +44,16 @@ export default function PredictionSection({
     setter(rawVal ? parseInt(rawVal, 10) : 0);
   };
 
-  const getFormattedDate = () => {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    return `${yyyy}${mm}${dd}`;
-  };
-
-  const domain = typeof window !== 'undefined' ? window.location.hostname : 'hitungsaham.com';
-  const cleanFileName = `${domain}-Rencana-${ticker || 'SAHAM'}-${hargaBeli || 0}-${getFormattedDate()}`;
+  const cleanFileName = clientName 
+    ? `kalkulator-prediksi-${ticker}-${clientName.replace(/\s+/g, '-')}` 
+    : `kalkulator-prediksi-${ticker}`;
 
   return (
     <section id="prediction" className="space-y-6 scroll-mt-20">
-      <div className="pb-2">
+      <div className=" pb-4">
         <div className="text-xs font-bold text-acc-green uppercase tracking-wider">Kalkulator #3</div>
         <h2 className="text-xl sm:text-2xl font-extrabold flex items-center gap-2.5 text-main mt-1">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-green">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-acc-green  shadow-acc-green/20">
             <Target size={20} />
           </div>
           Prediksi Jual / Beli & Target Untung Rugi
@@ -81,10 +61,10 @@ export default function PredictionSection({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* Left Form Card - NO SHADOW, NO BORDER */}
-        <div className="bg-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between min-h-[440px]">
+        {/* Left Form Card */}
+        <div className="bg-card  rounded-3xl p-6 sm:p-8  flex flex-col justify-between min-h-[440px]">
           <div>
-            <div className="flex items-center justify-between pb-4 mb-6">
+            <div className="flex items-center justify-between  pb-4 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-green text-acc-green">
                   <Target size={20} />
@@ -93,34 +73,29 @@ export default function PredictionSection({
               </div>
             </div>
 
-            {/* Row 1: Ticker & Nama */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-ticker" className="text-xs font-bold text-muted block leading-tight">
-                    Kode Ticker (A-Z)
-                  </label>
-                </div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="space-y-1">
+                <label htmlFor="pred-ticker" className="text-[11px] font-bold text-muted block">
+                  Ticker (A-Z)
+                </label>
                 <input
                   id="pred-ticker"
                   type="text"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-bold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all uppercase placeholder-gray-400"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-bold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all uppercase placeholder-gray-400"
                   value={ticker}
                   onChange={handleTickerChange}
-                  placeholder="e.g. BBRI"
+                  placeholder="BBRI"
                 />
               </div>
 
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-name" className="text-xs font-bold text-muted block leading-tight">
-                    Nama Anda (Opsional)
-                  </label>
-                </div>
+              <div className="space-y-1">
+                <label htmlFor="pred-name" className="text-[11px] font-bold text-muted block">
+                  Nama (Opsional)
+                </label>
                 <input
                   id="pred-name"
                   type="text"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all placeholder-gray-400"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all placeholder-gray-400"
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="e.g. Budi"
@@ -128,36 +103,31 @@ export default function PredictionSection({
               </div>
             </div>
 
-            {/* Row 2: Harga Beli & Lot */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-price" className="text-xs font-bold text-muted block leading-tight">
-                    Harga Beli Saham (Rp)
-                  </label>
-                </div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="space-y-1">
+                <label htmlFor="pred-price" className="text-[11px] font-bold text-muted block">
+                  Harga Beli (Rp)
+                </label>
                 <input
                   id="pred-price"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={hargaBeli ? formatNumber(hargaBeli) : ''}
                   onChange={handleNumChange(setHargaBeli)}
                   placeholder="e.g. 1000"
                 />
               </div>
 
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-lot" className="text-xs font-bold text-muted block leading-tight">
-                    Jumlah Lot
-                  </label>
-                </div>
+              <div className="space-y-1">
+                <label htmlFor="pred-lot" className="text-[11px] font-bold text-muted block">
+                  Jumlah Lot
+                </label>
                 <input
                   id="pred-lot"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={lot ? formatNumber(lot) : ''}
                   onChange={handleNumChange(setLot)}
                   placeholder="e.g. 10"
@@ -165,71 +135,61 @@ export default function PredictionSection({
               </div>
             </div>
 
-            {/* Row 3: Fee Beli & Fee Jual */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-feebeli" className="text-xs font-bold text-muted block leading-tight">
-                    Fee Beli Sekuritas (%)
-                  </label>
-                </div>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="space-y-1">
+                <label htmlFor="pred-feebeli" className="text-[11px] font-bold text-muted block">
+                  Fee Beli (%)
+                </label>
                 <input
                   id="pred-feebeli"
                   type="number"
                   step="0.01"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={feeBeli}
                   onChange={(e) => setFeeBeli(parseFloat(e.target.value) || 0)}
                 />
               </div>
 
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-feejual" className="text-xs font-bold text-muted block leading-tight">
-                    Fee Jual Sekuritas (%)
-                  </label>
-                </div>
+              <div className="space-y-1">
+                <label htmlFor="pred-feejual" className="text-[11px] font-bold text-muted block">
+                  Fee Jual (%)
+                </label>
                 <input
                   id="pred-feejual"
                   type="number"
                   step="0.01"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={feeJual}
                   onChange={(e) => setFeeJual(parseFloat(e.target.value) || 0)}
                 />
               </div>
             </div>
 
-            {/* Row 4: Target Profit & Batas Rugi */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-profit" className="text-xs font-bold text-muted block leading-tight">
-                    Target Untung (Rp)
-                  </label>
-                </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label htmlFor="pred-profit" className="text-[11px] font-bold text-muted block">
+                  Target Untung (Rp)
+                </label>
                 <input
                   id="pred-profit"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={targetUntungRp ? formatNumber(targetUntungRp) : ''}
                   onChange={handleNumChange(setTargetUntungRp)}
                   placeholder="e.g. 250000"
                 />
               </div>
 
-              <div className="flex flex-col justify-end">
-                <div className="min-h-[32px] flex items-end pb-1">
-                  <label htmlFor="pred-loss" className="text-xs font-bold text-muted block leading-tight">
-                    Batas Maksimal Rugi (Rp)
-                  </label>
-                </div>
+              <div className="space-y-1">
+                <label htmlFor="pred-loss" className="text-[11px] font-bold text-muted block">
+                  Batas Rugi (Rp)
+                </label>
                 <input
                   id="pred-loss"
                   type="text"
                   inputMode="numeric"
-                  className="w-full bg-page rounded-xl px-4 py-3 text-main font-semibold outline-none focus:ring-2 focus:ring-acc-green/20 transition-all"
+                  className="w-full bg-page rounded-xl px-3 py-2.5 text-main font-semibold outline-none focus:border-acc-green focus:ring-2 focus:ring-acc-green/10 transition-all"
                   value={targetRugiRp ? formatNumber(targetRugiRp) : ''}
                   onChange={handleNumChange(setTargetRugiRp)}
                   placeholder="e.g. 100000"
@@ -239,136 +199,98 @@ export default function PredictionSection({
           </div>
         </div>
 
-        {/* Right Output Card - NO SHADOW, NO BORDER, NO GRADIENT */}
-        <ExportCardWrapper
-          fileName={cleanFileName}
-          calculatorType="prediction"
-          hideDefaultWatermark={true}
-        >
-          {({ isExporting }) => (
-            <>
-              <div className="flex items-center justify-between pb-4 mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-sub-green text-acc-green">
-                    <Coins size={20} />
-                  </div>
-                  <div>
-                    <span className="font-extrabold text-main block leading-tight">
-                      Proyeksi {ticker ? ticker : 'SAHAM'}
-                    </span>
-                    {clientName.trim() && (
-                      <span className="text-[10px] text-muted block mt-0.5 font-medium">
-                        Dihitung oleh: {clientName.trim()}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-acc-green bg-sub-green px-2.5 py-1 rounded-lg">
-                  {formatNumber(result.rincian.totalLembar)} Lembar
+        {/* Right Output Card */}
+        <ExportCardWrapper fileName={cleanFileName} calculatorType="prediction">
+          <div className="flex items-start justify-between pb-4 mb-6 gap-2">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-sub-green text-acc-green">
+                <DollarSign size={20} />
+              </div>
+              <div className="min-w-0">
+                <span className="font-extrabold text-main block leading-tight break-words">
+                  Proyeksi {ticker ? ticker : 'SAHAM'}
                 </span>
+                {clientName && (
+                  <span className="text-[10px] text-muted block mt-0.5">Dihitung oleh: {clientName}</span>
+                )}
               </div>
+            </div>
+            <span className="shrink-0 text-xs font-bold text-acc-green bg-sub-green px-2.5 py-1 rounded-lg whitespace-nowrap">
+              {formatNumber(result.rincian.totalLembar)} Lembar
+            </span>
+          </div>
 
-              {/* Total Modal Box - SOLID COLOR */}
-              <div className="bg-acc-green text-white rounded-2xl p-5 flex items-center justify-between">
-                <div>
-                  <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-85">
-                    Total Modal Pembelian (+ Fee Beli)
-                  </div>
-                  <div className="text-xl sm:text-2xl font-extrabold mt-1">
-                    {formatIDR(result.rincian.totalModal)}
-                  </div>
-                </div>
-                <div>
-                  <Coins size={28} />
-                </div>
+          <div className="bg-gradient-to-r from-acc-green to-acc-green/90 text-white rounded-2xl p-4 flex items-center justify-between gap-2 shadow-md shadow-acc-green/10 overflow-hidden">
+            <div className="min-w-0">
+              <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-85">Total Modal (+ Fee Beli)</div>
+              <div className="text-lg sm:text-2xl font-extrabold mt-1 truncate">{formatIDR(result.rincian.totalModal)}</div>
+            </div>
+            <div className="shrink-0 opacity-80">
+              <DollarSign size={22} />
+            </div>
+          </div>
+
+          {/* Skenario Untung Box */}
+          <div className="bg-sub-green border border-acc-green rounded-2xl p-4 mt-4 mb-3">
+            <div className="flex items-center justify-between mb-3 border-b border-acc-green/10 pb-2 gap-2">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-acc-green min-w-0">
+                <TrendingUp size={16} className="shrink-0" />
+                <span className="truncate">TARGET UNTUNG (TAKE PROFIT)</span>
               </div>
+              <span className="shrink-0 font-bold text-acc-green text-sm whitespace-nowrap">
+                +{result.skenarioUntung.persentase}%
+              </span>
+            </div>
 
-              {/* Skenario Untung Box */}
-              <div className="bg-sub-green rounded-2xl p-4 mt-4 mb-3">
-                <div className="flex items-center justify-between mb-3 pb-2">
-                  <div className="flex items-center gap-1.5 font-bold text-xs text-acc-green">
-                    <TrendingUp size={18} />
-                    <span>SKENARIO TARGET UNTUNG (TAKE PROFIT)</span>
-                  </div>
-                  <span className="font-bold text-acc-green text-sm">
-                    +{result.skenarioUntung.persentase}%
-                  </span>
-                </div>
-
-                <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2">
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">
-                      Harga Jual Valid BEI (Ceil)
-                    </span>
-                    <div className="text-xs xs:text-sm sm:text-base md:text-lg font-extrabold text-main truncate">
-                      {formatIDR(result.skenarioUntung.hargaBEI)}
-                    </div>
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">
-                      Profit Bersih Real
-                    </span>
-                    <div className="text-xs xs:text-sm sm:text-base md:text-lg font-extrabold text-acc-green truncate">
-                      +{formatIDR(result.skenarioUntung.labaBersihReal)}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-[10px] text-muted mt-2">
-                  Harga Exact Matematik: {formatIDR(result.skenarioUntung.hargaExact)}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Harga Jual BEI</span>
+                <div className="text-base font-extrabold text-main">
+                  {formatIDR(result.skenarioUntung.hargaBEI)}
                 </div>
               </div>
-
-              {/* Watermark Export In Middle (Only visible when exporting) */}
-              {isExporting && (
-                <div className="flex items-center justify-between text-[11px] text-muted py-3 my-2">
-                  <div className="bg-acc-blue rounded-full px-5 py-2 text-white font-semibold text-xs">
-                    <WebsiteBrand />
-                  </div>
-                  <span>Kalkulator Saham</span>
-                </div>
-              )}
-
-              {/* Skenario Rugi Box */}
-              <div className="bg-sub-pink rounded-2xl p-4">
-                <div className="flex items-center justify-between mb-3 pb-2">
-                  <div className="flex items-center gap-1.5 font-bold text-xs text-acc-pink">
-                    <TrendingDown size={18} />
-                    <span>SKENARIO BATAS RUGI (STOP LOSS)</span>
-                  </div>
-                  <span className="font-bold text-acc-pink text-sm">
-                    -{result.skenarioRugi.persentase}%
-                  </span>
-                </div>
-
-                <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2">
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-muted flex flex-wrap items-center gap-1">
-                      Harga Jual Valid BEI (Floor)
-                      {result.skenarioRugi.hargaBEI === hargaBeli && (
-                        <span className="text-[9px] bg-sub-pink text-acc-pink px-1.5 py-0.5 rounded font-extrabold">
-                          (Harga Jual = Harga Beli)
-                        </span>
-                      )}
-                    </span>
-                    <div className="text-xs xs:text-sm sm:text-base md:text-lg font-extrabold text-main truncate mt-0.5">
-                      {formatIDR(result.skenarioRugi.hargaBEI)}
-                    </div>
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">
-                      Rugi Bersih Real
-                    </span>
-                    <div className="text-xs xs:text-sm sm:text-base md:text-lg font-extrabold text-acc-pink truncate mt-0.5">
-                      -{formatIDR(result.skenarioRugi.rugiBersihReal)}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-[10px] text-muted mt-2">
-                  Harga Exact Matematik: {formatIDR(result.skenarioRugi.hargaExact)}
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Profit Bersih</span>
+                <div className="text-base font-extrabold text-acc-green">
+                  +{formatIDR(result.skenarioUntung.labaBersihReal)}
                 </div>
               </div>
-            </>
-          )}
+            </div>
+            <div className="text-[10px] text-muted mt-2">
+              Harga Exact: {formatIDR(result.skenarioUntung.hargaExact)}
+            </div>
+          </div>
+
+          {/* Skenario Rugi Box */}
+          <div className="bg-sub-pink border border-acc-pink rounded-2xl p-4">
+            <div className="flex items-center justify-between mb-3 border-b border-acc-pink/10 pb-2 gap-2">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-acc-pink min-w-0">
+                <TrendingDown size={16} className="shrink-0" />
+                <span className="truncate">BATAS RUGI (STOP LOSS)</span>
+              </div>
+              <span className="shrink-0 font-bold text-acc-pink text-sm whitespace-nowrap">
+                -{result.skenarioRugi.persentase}%
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Harga Jual BEI</span>
+                <div className="text-base font-extrabold text-main">
+                  {formatIDR(result.skenarioRugi.hargaBEI)}
+                </div>
+              </div>
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider block text-muted">Rugi Bersih</span>
+                <div className="text-base font-extrabold text-acc-pink">
+                  -{formatIDR(result.skenarioRugi.rugiBersihReal)}
+                </div>
+              </div>
+            </div>
+            <div className="text-[10px] text-muted mt-2">
+              Harga Exact: {formatIDR(result.skenarioRugi.hargaExact)}
+            </div>
+          </div>
         </ExportCardWrapper>
       </div>
     </section>

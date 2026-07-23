@@ -1,12 +1,13 @@
 import Navbar from '@/components/Navbar';
-import CalculatorContainer from '@/components/CalculatorContainer';
+import AraArbSection from '@/components/AraArbSection';
+import AvgUpDownSection from '@/components/AvgUpDownSection';
+import PredictionSection from '@/components/PredictionSection';
+import FaqSection, { FaqItemData } from '@/components/FaqSection';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
 import DynamicDisclaimer from '@/components/DynamicDisclaimer';
 import WebsiteBrand from '@/components/WebsiteBrand';
 import { Metadata } from 'next';
 import { prisma } from '@/lib/db';
-
-export const revalidate = 60; // Revalidate database rules cache every 60 seconds
 
 export const metadata: Metadata = {
   title: 'Kalkulator Saham BEI - Hitung ARA, ARB, Average & Target Untung Rugi',
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   let fractionRules = undefined;
   let tax = 0.0;
+  let faqs: FaqItemData[] = [];
 
   try {
     const rules = await prisma.fractionRule.findMany({
@@ -48,12 +50,23 @@ export default async function HomePage() {
     console.error('Failed to load tax setting:', err);
   }
 
+  try {
+    const dbFaqs = await prisma.faqItem.findMany({
+      orderBy: { order: 'asc' },
+    });
+    if (dbFaqs && dbFaqs.length > 0) {
+      faqs = dbFaqs;
+    }
+  } catch (err) {
+    console.error('Failed to load faqs:', err);
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-page text-main transition-colors duration-300">
       <AnalyticsTracker />
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full grow space-y-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full grow space-y-16">
         {/* HERO SECTION */}
         <section className="text-center max-w-3xl mx-auto mt-8 mb-10 space-y-4">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-main">
@@ -64,18 +77,23 @@ export default async function HomePage() {
           </p>
         </section>
 
-        {/* CALCULATOR CONTAINER (Shared Ticker State) */}
-        <CalculatorContainer fractionRules={fractionRules} tax={tax} />
+        {/* SECTION 1: ARA / ARB */}
+        <AraArbSection fractionRules={fractionRules} />
+
+        {/* SECTION 2: AVERAGE UP / DOWN */}
+        <AvgUpDownSection />
+
+        {/* SECTION 3: PREDIKSI TARGET JUAL / BELI */}
+        <PredictionSection fractionRules={fractionRules} tax={tax} />
+
+        {/* SECTION 4: FAQ ACCORDION */}
+        <FaqSection faqs={faqs} />
       </main>
 
-      {/* FOOTER - NO BORDER, NO SHADOW */}
-      <footer className="bg-card py-8 text-center mt-auto px-4">
-        <div className="max-w-7xl mx-auto space-y-2">
-          <p className="font-bold text-main">
+      <footer className="border-t border-border-custom bg-card/50 py-8 text-center mt-auto px-4">
+        <div className="max-w-7xl mx-auto">
+          <p className="font-bold text-main mb-1.5">
             <WebsiteBrand /> • Alat Analisis Saham BEI
-          </p>
-          <p className="text-xs text-muted font-medium">
-            Contact Us: <a href="mailto:admin@hitungsaham.com" className="text-acc-blue hover:underline">admin@hitungsaham.com</a>
           </p>
           <DynamicDisclaimer />
         </div>

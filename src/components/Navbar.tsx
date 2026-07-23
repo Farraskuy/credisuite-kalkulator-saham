@@ -2,19 +2,19 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { TrendingUp, Menu, X } from 'lucide-react';
+import { TrendingUp, ShieldCheck, Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-card/90 backdrop-blur-md transition-colors duration-300">
+    <header className="sticky top-0 z-50 w-full bg-card/85 backdrop-blur-md  transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo Brand - NO SHADOW */}
+          {/* Logo Brand */}
           <Link href="/" className="flex items-center gap-2.5 font-extrabold text-lg text-main">
-            <div className="w-9 h-9 rounded-xl bg-acc-blue text-white flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-acc-blue text-white flex items-center justify-center shadow-md shadow-acc-blue/20">
               <TrendingUp size={22} />
             </div>
             <span>Kalkulator Saham</span>
@@ -30,6 +30,9 @@ export default function Navbar() {
             </a>
             <a href="#prediction" className="text-sub hover:bg-sub-blue hover:text-acc-blue px-3.5 py-2 rounded-xl text-sm font-semibold transition-all duration-200">
               Target Jual/Beli
+            </a>
+            <a href="#faq" className="text-sub hover:bg-sub-blue hover:text-acc-blue px-3.5 py-2 rounded-xl text-sm font-semibold transition-all duration-200">
+              FAQ
             </a>
           </nav>
 
@@ -52,9 +55,9 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown - NO BORDER */}
+      {/* Mobile Menu Dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-card px-4 py-4 space-y-3 transition-all duration-300">
+        <div className="md:hidden border-t border-border-custom bg-card px-4 py-4 space-y-3 transition-all duration-300">
           <nav className="flex flex-col space-y-1">
             <a
               href="#ara-arb"
@@ -76,6 +79,13 @@ export default function Navbar() {
               className="text-sub hover:bg-sub-blue hover:text-acc-blue px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
             >
               Target Jual/Beli
+            </a>
+            <a
+              href="#faq"
+              onClick={() => setIsOpen(false)}
+              className="text-sub hover:bg-sub-blue hover:text-acc-blue px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+            >
+              FAQ
             </a>
           </nav>
         </div>
